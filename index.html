@@ -3,367 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestor de Tareas Personal</title>
-    <meta name="description" content="Organiza tus tareas y actividades de forma simple y eficiente">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>TaskMaster Pro</title>
     <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: #333;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            padding: 30px 0;
-            margin-bottom: 30px;
-        }
-        
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            color: white;
-            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .subtitle {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.2rem;
-            font-weight: 300;
-        }
-        
-        .main-content {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            margin-top: 20px;
-        }
-        
-        .left-panel, .right-panel {
-            flex: 1;
-            min-width: 350px;
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-        }
-        
-        h2 {
-            font-size: 1.6rem;
-            margin-bottom: 25px;
-            color: #2575fc;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid #f0f2ff;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        input, textarea {
-            width: 100%;
-            padding: 14px;
-            background-color: #f8f9ff;
-            border: 2px solid #e1e6ff;
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: #2575fc;
-            background-color: white;
-            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.1);
-        }
-        
-        .btn {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            width: 100%;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.1);
-        }
-        
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            margin: 30px 0;
-            background: #f8f9ff;
-            padding: 20px;
-            border-radius: 15px;
-        }
-        
-        .stat-item { text-align: center; flex: 1; }
-        .stat-number { font-size: 1.8rem; font-weight: 800; color: #2575fc; }
-        .stat-label { color: #666; font-size: 0.8rem; text-transform: uppercase; }
-        
-        .task-list {
-            max-height: 600px;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
-        
-        .task-item {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-left: 6px solid #2575fc;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .task-item.completed {
-            border-left-color: #00d68f;
-            background: #f0f9f5;
-            opacity: 0.8;
-        }
-        
-        .task-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-        
-        .task-date {
-            font-size: 0.8rem;
-            color: #718096;
-            margin-bottom: 10px;
-        }
-        
-        .task-description {
-            font-size: 0.9rem;
-            background: #f8f9ff;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            white-space: pre-wrap;
-        }
-        
-        .task-actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .btn-complete { background: #00d68f; font-size: 0.85rem; padding: 10px; }
-        .btn-delete { background: #ff4757; font-size: 0.85rem; padding: 10px; }
-        
-        .badge {
-            font-size: 0.65rem;
-            padding: 3px 10px;
-            border-radius: 20px;
-            margin-left: 8px;
-            color: white;
-            font-weight: bold;
+        :root {
+            --primary: #2575fc;
+            --secondary: #6a11cb;
+            --bg: #f4f7f6;
+            --text: #333;
+            --danger: #ff4757;
+            --success: #00d68f;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        
+        body { background: var(--bg); color: var(--text); padding: 20px; }
 
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            color: white;
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
+        .container { max-width: 1000px; margin: 0 auto; }
+
+        header { text-align: center; margin-bottom: 30px; }
+        
+        /* Contenedor Principal */
+        .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
+
+        h2 { font-size: 1.2rem; margin-bottom: 15px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+
+        /* Formulario */
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; }
+
+        .btn { border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary { background: var(--primary); color: white; width: 100%; justify-content: center; }
+        .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); font-size: 0.8rem; }
+        .btn-danger { background: var(--danger); color: white; padding: 5px 10px; font-size: 0.8rem; }
+
+        /* Filtros y Carpetas */
+        .folder-list { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+        .folder-chip { padding: 5px 15px; background: #eee; border-radius: 20px; cursor: pointer; font-size: 0.85rem; transition: 0.3s; }
+        .folder-chip.active { background: var(--primary); color: white; }
+
+        /* Lista de Tareas */
+        .task-item { border-left: 5px solid var(--primary); padding: 15px; background: #fff; border-radius: 10px; margin-bottom: 10px; position: relative; border: 1px solid #f0f0f0; border-left: 5px solid var(--primary); }
+        .task-item.completed { opacity: 0.6; border-left-color: var(--success); text-decoration: line-through; }
+        .task-info { margin-bottom: 10px; }
+        .task-meta { font-size: 0.75rem; color: #777; display: flex; gap: 15px; }
+        .urgent { color: var(--danger); font-weight: bold; }
+
+        /* Zona de Respaldo */
+        .backup-controls { display: flex; gap: 10px; margin-top: 20px; }
+        #fileInput { display: none; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-check-double"></i> TaskMaster</h1>
-            <p class="subtitle">Gestión eficiente de tareas y proyectos</p>
-        </header>
-        
-        <div class="main-content">
-            <div class="left-panel">
+
+<div class="container">
+    <header>
+        <h1>TaskMaster Pro</h1>
+        <p>Organización avanzada y persistente</p>
+    </header>
+
+    <div class="grid">
+        <div class="sidebar">
+            <div class="card">
                 <h2><i class="fas fa-plus"></i> Nueva Tarea</h2>
                 <form id="taskForm">
                     <div class="form-group">
-                        <label for="taskTitle"><i class="fas fa-pen"></i> Título</label>
-                        <input type="text" id="taskTitle" placeholder="Ej: Finalizar diseño de interfaz" required>
+                        <label>Título</label>
+                        <input type="text" id="taskTitle" required placeholder="Ej: Estudiar verbos">
                     </div>
-                    
                     <div class="form-group">
-                        <label for="taskDueDate"><i class="fas fa-calendar-day"></i> Fecha Límite</label>
+                        <label>Carpeta / Grupo</label>
+                        <input type="text" id="taskFolder" list="folderSuggestions" placeholder="Ej: Castellano, Trabajo...">
+                        <datalist id="folderSuggestions"></datalist>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha Entrega</label>
                         <input type="date" id="taskDueDate">
                     </div>
-
-                    <div class="form-group">
-                        <label for="taskDescription"><i class="fas fa-info-circle"></i> Descripción</label>
-                        <textarea id="taskDescription" placeholder="Detalles importantes..."></textarea>
-                    </div>
-                    
-                    <button type="submit" class="btn">
-                        <i class="fas fa-save"></i> Guardar Tarea
-                    </button>
+                    <button type="submit" class="btn btn-primary">Añadir Tarea</button>
                 </form>
-                
-                <div class="stats">
-                    <div class="stat-item">
-                        <div class="stat-number" id="totalTasks">0</div>
-                        <div class="stat-label">Total</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="completedTasks" style="color:#00d68f">0</div>
-                        <div class="stat-label">Completas</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="pendingTasks" style="color:#ffb347">0</div>
-                        <div class="stat-label">Pendientes</div>
-                    </div>
-                </div>
             </div>
-            
-            <div class="right-panel">
-                <h2><i class="fas fa-stream"></i> Mi Lista</h2>
-                <div class="task-list" id="taskList"></div>
+
+            <div class="card">
+                <h2><i class="fas fa-database"></i> Backup</h2>
+                <div class="backup-controls">
+                    <button class="btn btn-outline" onclick="exportData()"><i class="fas fa-download"></i> Exportar</button>
+                    <button class="btn btn-outline" onclick="document.getElementById('fileInput').click()"><i class="fas fa-upload"></i> Importar</button>
+                </div>
+                <input type="file" id="fileInput" accept=".json">
             </div>
         </div>
-        <p class="footer">TaskMaster &copy; 2026 • Almacenamiento local privado</p>
+
+        <div class="main-list">
+            <div class="card">
+                <h2><i class="fas fa-folder-open"></i> Filtrar por Carpeta</h2>
+                <div class="folder-list" id="folderFilters">
+                    </div>
+            </div>
+
+            <div id="taskList">
+                </div>
+        </div>
     </div>
+</div>
 
-    <script>
-        const taskForm = document.getElementById('taskForm');
-        const taskTitle = document.getElementById('taskTitle');
-        const taskDescription = document.getElementById('taskDescription');
-        const taskDueDate = document.getElementById('taskDueDate');
-        const taskList = document.getElementById('taskList');
+<script>
+    // 4. PERSISTENCIA: Cargar datos al iniciar
+    let tasks = JSON.parse(localStorage.getItem('tm_pro_data')) || [];
+    let currentFilter = 'todas';
+
+    const taskForm = document.getElementById('taskForm');
+    const taskList = document.getElementById('taskList');
+    const folderFilters = document.getElementById('folderFilters');
+    const folderSuggestions = document.getElementById('folderSuggestions');
+
+    function saveData() {
+        localStorage.setItem('tm_pro_data', JSON.stringify(tasks));
+        render();
+    }
+
+    // 2. ORDENACIÓN: Por fecha (más cercana primero)
+    function sortTasks(taskArr) {
+        return taskArr.sort((a, b) => {
+            if (a.completed !== b.completed) return a.completed - b.completed;
+            if (!a.dueDate) return 1;
+            if (!b.dueDate) return -1;
+            return new Date(a.dueDate) - new Date(b.dueDate);
+        });
+    }
+
+    function render() {
+        // Actualizar sugerencias de carpetas y filtros
+        const folders = [...new Set(tasks.map(t => t.folder || 'Sin Carpeta'))];
         
-        let tasks = JSON.parse(localStorage.getItem('tasks_app')) || [];
+        folderFilters.innerHTML = `<div class="folder-chip ${currentFilter === 'todas' ? 'active' : ''}" onclick="filterBy('todas')">Todas</div>`;
+        folderSuggestions.innerHTML = '';
+        
+        folders.forEach(f => {
+            folderFilters.innerHTML += `<div class="folder-chip ${currentFilter === f ? 'active' : ''}" onclick="filterBy('${f}')">${f}</div>`;
+            folderSuggestions.innerHTML += `<option value="${f}">`;
+        });
 
-        function saveTasks() {
-            localStorage.setItem('tasks_app', JSON.stringify(tasks));
-            renderTasks();
-        }
+        // Filtrar tareas
+        let filtered = currentFilter === 'todas' ? tasks : tasks.filter(t => t.folder === currentFilter);
+        
+        // Ordenar
+        filtered = sortTasks(filtered);
 
-        function renderTasks() {
-            if (tasks.length === 0) {
-                taskList.innerHTML = '<div style="text-align:center; padding:40px; color:#a0aec0"><i class="fas fa-ghost" style="font-size:3rem; display:block; margin-bottom:10px"></i><p>No hay tareas pendientes.</p></div>';
-                updateStats();
-                return;
-            }
-
-            const sortedTasks = [...tasks].sort((a, b) => a.completed - b.completed);
-
-            taskList.innerHTML = sortedTasks.map(task => `
-                <div class="task-item ${task.completed ? 'completed' : ''}">
-                    <div class="task-title">
-                        ${task.title}
-                        <span class="badge" style="background:${task.completed ? '#00d68f' : '#ffb347'}">
-                            ${task.completed ? 'FINALIZADA' : 'PENDIENTE'}
-                        </span>
+        taskList.innerHTML = filtered.length === 0 ? '<p style="text-align:center">No hay tareas en esta sección.</p>' : 
+            filtered.map(t => {
+                const isUrgent = t.dueDate && new Date(t.dueDate) < new Date() && !t.completed;
+                return `
+                <div class="task-item ${t.completed ? 'completed' : ''}">
+                    <div class="task-info">
+                        <strong>${t.title}</strong>
+                        <div class="task-meta">
+                            <span><i class="fas fa-folder"></i> ${t.folder || 'General'}</span>
+                            <span class="${isUrgent ? 'urgent' : ''}">
+                                <i class="fas fa-calendar"></i> ${t.dueDate || 'Sin fecha'}
+                            </span>
+                        </div>
                     </div>
-                    <div class="task-date">
-                        <i class="far fa-clock"></i> Registro: ${new Date(task.createdAt).toLocaleDateString()}
-                        ${task.dueDate ? ` | <span style="color:#e53e3e; font-weight:bold"><i class="fas fa-hourglass-half"></i> Límite: ${task.dueDate}</span>` : ''}
-                    </div>
-                    ${task.description ? `<div class="task-description">${task.description}</div>` : ''}
-                    <div class="task-actions">
-                        ${!task.completed ? `
-                            <button class="btn btn-complete complete-task" data-id="${task.id}">
-                                <i class="fas fa-check"></i> Completar
-                            </button>
-                        ` : ''}
-                        <button class="btn btn-delete delete-task" data-id="${task.id}">
-                            <i class="fas fa-trash"></i> Eliminar
+                    <div style="display:flex; gap:10px">
+                        <button class="btn btn-outline" onclick="toggleTask(${t.id})">
+                            <i class="fas ${t.completed ? 'fa-undo' : 'fa-check'}"></i>
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteTask(${t.id})">
+                            <i class="fas fa-trash"></i>
                         </button>
                     </div>
                 </div>
-            `).join('');
-            
-            updateStats();
+            `}).join('');
+    }
+
+    // Eventos
+    taskForm.onsubmit = (e) => {
+        e.preventDefault();
+        const newTask = {
+            id: Date.now(),
+            title: document.getElementById('taskTitle').value,
+            folder: document.getElementById('taskFolder').value || 'Sin Carpeta',
+            dueDate: document.getElementById('taskDueDate').value,
+            completed: false
+        };
+        tasks.push(newTask);
+        taskForm.reset();
+        saveData();
+    };
+
+    const toggleTask = (id) => {
+        tasks = tasks.map(t => t.id === id ? {...t, completed: !t.completed} : t);
+        saveData();
+    };
+
+    const deleteTask = (id) => {
+        if(confirm('¿Eliminar tarea?')) {
+            tasks = tasks.filter(t => t.id !== id);
+            saveData();
         }
+    };
 
-        function updateStats() {
-            const total = tasks.length;
-            const completed = tasks.filter(t => t.completed).length;
-            document.getElementById('totalTasks').textContent = total;
-            document.getElementById('completedTasks').textContent = completed;
-            document.getElementById('pendingTasks').textContent = total - completed;
-        }
+    const filterBy = (folder) => {
+        currentFilter = folder;
+        render();
+    };
 
-        taskForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const newTask = {
-                id: Date.now(),
-                title: taskTitle.value,
-                description: taskDescription.value,
-                dueDate: taskDueDate.value,
-                completed: false,
-                createdAt: new Date().toISOString()
-            };
-            tasks.push(newTask);
-            saveTasks();
-            taskForm.reset();
-            taskTitle.focus();
-        });
+    // 1. EXPORTAR / IMPORTAR
+    function exportData() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "mis_tareas.json");
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    }
 
-        taskList.addEventListener('click', (e) => {
-            const completeBtn = e.target.closest('.complete-task');
-            const deleteBtn = e.target.closest('.delete-task');
-
-            if (completeBtn) {
-                const id = parseInt(completeBtn.dataset.id);
-                tasks = tasks.map(t => t.id === id ? {...t, completed: true} : t);
-                saveTasks();
-            }
-
-            if (deleteBtn) {
-                const id = parseInt(deleteBtn.dataset.id);
-                if(confirm('¿Eliminar esta tarea permanentemente?')) {
-                    tasks = tasks.filter(t => t.id !== id);
-                    saveTasks();
+    document.getElementById('fileInput').onchange = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const imported = JSON.parse(event.target.result);
+                if(Array.isArray(imported)) {
+                    tasks = imported;
+                    saveData();
+                    alert('¡Importación exitosa!');
                 }
+            } catch (err) {
+                alert('Archivo no válido');
             }
-        });
+        };
+        reader.readAsText(file);
+    };
 
-        renderTasks();
-    </script>
+    // Render inicial
+    render();
+</script>
+
 </body>
 </html>
