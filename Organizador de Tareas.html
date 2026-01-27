@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Tareas - Colegio</title>
+    <meta name="description" content="Gestor de tareas para el colegio - Comparte y organiza tus actividades">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✅</text></svg>">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #f1f1f1; min-height: 100vh; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { text-align: center; padding: 30px 0; margin-bottom: 30px; border-bottom: 2px solid #0f3460; }
+        h1 { font-size: 2.8rem; margin-bottom: 10px; background: linear-gradient(to right, #4cc9f0, #4361ee); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .subtitle { color: #a9b7c6; font-size: 1.2rem; max-width: 600px; margin: 10px auto; }
+        .instructions { background: rgba(15, 52, 96, 0.3); padding: 15px; border-radius: 10px; margin: 20px auto; max-width: 800px; }
+        .main-content { display: flex; flex-wrap: wrap; gap: 30px; margin-top: 20px; }
+        .left-panel, .right-panel { flex: 1; min-width: 300px; background: rgba(21, 33, 62, 0.8); border-radius: 15px; padding: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        /* ... (el resto del CSS igual que antes) ... */
+        .github-link { margin-top: 20px; text-align: center; }
+        .github-link a { color: #4cc9f0; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+        .github-link a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-tasks"></i> Gestor de Tareas - Colegio</h1>
+            <p class="subtitle">Organiza tus tareas del colegio - Cada uno ve sus propias tareas</p>
+            
+            <div class="instructions">
+                <p><i class="fas fa-info-circle"></i> <strong>Instrucciones:</strong> Agrega tus tareas, márcalas como completadas. Los datos se guardan en tu navegador.</p>
+                <p><i class="fas fa-share-alt"></i> <strong>Comparte con amigos:</strong> Dales este enlace: <code id="pageUrl">https://tu-usuario.github.io/gestor-tareas</code></p>
+                <button class="btn" onclick="copyUrl()" style="margin-top: 10px; padding: 8px 15px;">
+                    <i class="fas fa-copy"></i> Copiar Enlace
+                </button>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <!-- Mismo contenido que antes -->
+            <div class="left-panel">
+                <h2><i class="fas fa-plus-circle"></i> Nueva Tarea</h2>
+                <form id="taskForm">
+                    <div class="form-group">
+                        <label for="taskTitle"><i class="fas fa-heading"></i> Título</label>
+                        <input type="text" id="taskTitle" placeholder="Ej: Matemáticas - Ejercicios página 45" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDescription"><i class="fas fa-align-left"></i> Descripción</label>
+                        <textarea id="taskDescription" placeholder="Detalles, fecha de entrega, materiales necesarios..."></textarea>
+                    </div>
+                    <button type="submit" class="btn"><i class="fas fa-plus"></i> Agregar Tarea</button>
+                </form>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalTasks">0</div>
+                        <div class="stat-label">Total Tareas</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="completedTasks">0</div>
+                        <div class="stat-label">Completadas</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="pendingTasks">0</div>
+                        <div class="stat-label">Pendientes</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <h2><i class="fas fa-list-check"></i> Mis Tareas</h2>
+                <div class="task-list" id="taskList">
+                    <!-- Las tareas se cargan aquí -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="github-link">
+            <a href="https://github.com" target="_blank">
+                <i class="fab fa-github"></i> Creado para el Colegio - Comparte con tus amigos
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Mismo JavaScript que antes, pero agregamos función para copiar URL
+        document.getElementById('pageUrl').textContent = window.location.href;
+        
+        function copyUrl() {
+            navigator.clipboard.writeText(window.location.href)
+                .then(() => alert('¡Enlace copiado! Compártelo con tus amigos del colegio.'))
+                .catch(err => console.error('Error copiando: ', err));
+        }
+        
+        // El resto del JavaScript es idéntico al anterior...
+        const taskForm = document.getElementById('taskForm');
+        const taskTitle = document.getElementById('taskTitle');
+        const taskDescription = document.getElementById('taskDescription');
+        const taskList = document.getElementById('taskList');
+        const totalTasksElement = document.getElementById('totalTasks');
+        const completedTasksElement = document.getElementById('completedTasks');
+        const pendingTasksElement = document.getElementById('pendingTasks');
+        
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        
+        function saveTasks() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            updateStats();
+        }
+        
+        function updateStats() {
+            const totalTasks = tasks.length;
+            const completedTasks = tasks.filter(task => task.completed).length;
+            const pendingTasks = totalTasks - completedTasks;
+            
+            totalTasksElement.textContent = totalTasks;
+            completedTasksElement.textContent = completedTasks;
+            pendingTasksElement.textContent = pendingTasks;
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        function renderTasks() {
+            if (tasks.length === 0) {
+                taskList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h3>No hay tareas aún</h3>
+                        <p>¡Agrega tu primera tarea del colegio!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const sortedTasks = [...tasks].sort((a, b) => {
+                if (a.completed && !b.completed) return 1;
+                if (!a.completed && b.completed) return -1;
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            });
+            
+            taskList.innerHTML = sortedTasks.map(task => `
+                <div class="task-item ${task.completed ? 'completed' : ''}" data-id="${task.id}">
+                    <div class="task-header">
+                        <div>
+                            <div class="task-title">${task.title} 
+                                <span class="status-badge ${task.completed ? 'status-completed' : 'status-pending'}">
+                                    ${task.completed ? 'Completada' : 'Pendiente'}
+                                </span>
+                            </div>
+                            <div class="task-date">Creada: ${formatDate(task.createdAt)}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-description">${task.description || '<em>Sin descripción</em>'}</div>
+                    
+                    <div class="task-actions">
+                        ${!task.completed ? `
+                            <button class="btn btn-complete complete-task" data-id="${task.id}">
+                                <i class="fas fa-check"></i> Marcar como Listo
+                            </button>
+                        ` : ''}
+                        <button class="btn btn-delete delete-task" data-id="${task.id}">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            updateStats();
+        }
+        
+        function addTask(title, description) {
+            const newTask = {
+                id: Date.now(),
+                title,
+                description,
+                completed: false,
+                createdAt: new Date().toISOString()
+            };
+            
+            tasks.push(newTask);
+            saveTasks();
+            renderTasks();
+        }
+        
+        function completeTask(taskId) {
+            tasks = tasks.map(task => {
+                if (task.id === taskId) {
+                    return { ...task, completed: true };
+                }
+                return task;
+            });
+            
+            saveTasks();
+            renderTasks();
+        }
+        
+        function deleteTask(taskId) {
+            if (confirm('¿Eliminar esta tarea?')) {
+                tasks = tasks.filter(task => task.id !== taskId);
+                saveTasks();
+                renderTasks();
+            }
+        }
+        
+        taskForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const title = taskTitle.value.trim();
+            const description = taskDescription.value.trim();
+            
+            if (title) {
+                addTask(title, description);
+                taskTitle.value = '';
+                taskDescription.value = '';
+                taskTitle.focus();
+            }
+        });
+        
+        taskList.addEventListener('click', function(e) {
+            const target = e.target;
+            
+            if (target.classList.contains('complete-task') || target.parentElement.classList.contains('complete-task')) {
+                const taskId = parseInt(target.dataset.id || target.parentElement.dataset.id);
+                completeTask(taskId);
+            }
+            
+            if (target.classList.contains('delete-task') || target.parentElement.classList.contains('delete-task')) {
+                const taskId = parseInt(target.dataset.id || target.parentElement.dataset.id);
+                deleteTask(taskId);
+            }
+        });
+        
+        // Tareas de ejemplo para el colegio
+        if (tasks.length === 0) {
+            addTask('Matemáticas - Ejercicios página 45', 'Resolver los problemas 1 al 10. Entregar el lunes.');
+            addTask('Historia - Investigación sobre la revolución industrial', 'Buscar 3 fuentes confiables. Mínimo 2 páginas.');
+            addTask('Proyecto de Ciencias - Experimento con plantas', 'Comprar materiales: semillas, tierra, macetas.');
+        }
+        
+        renderTasks();
+    </script>
+</body>
+</html>
