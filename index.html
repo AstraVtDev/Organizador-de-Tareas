@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestor de Tareas</title>
-    <meta name="description" content="Gestor de tareas - Comparte y organiza tus actividades">
+    <title>Gestor de Tareas Personal</title>
+    <meta name="description" content="Organiza tus tareas y actividades de forma simple y eficiente">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✅</text></svg>">
     <style>
@@ -16,7 +16,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: #333;
             min-height: 100vh;
             padding: 20px;
@@ -34,66 +34,16 @@
         }
         
         h1 {
-            font-size: 3.2rem;
+            font-size: 3rem;
             margin-bottom: 10px;
             color: white;
             text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            position: relative;
-            display: inline-block;
-        }
-        
-        h1::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150px;
-            height: 4px;
-            background: linear-gradient(to right, #ff7e5f, #feb47b);
-            border-radius: 2px;
         }
         
         .subtitle {
             color: rgba(255, 255, 255, 0.9);
-            font-size: 1.3rem;
-            max-width: 600px;
-            margin: 20px auto;
+            font-size: 1.2rem;
             font-weight: 300;
-        }
-        
-        .instructions {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 25px;
-            border-radius: 15px;
-            margin: 30px auto;
-            max-width: 900px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            border-left: 6px solid #4a6bff;
-        }
-        
-        .instructions h3 {
-            color: #4a6bff;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.4rem;
-        }
-        
-        .instructions p {
-            color: #555;
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-        
-        .instructions code {
-            background: #f0f2ff;
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-family: monospace;
-            color: #4a6bff;
-            border: 1px solid #d1d8ff;
         }
         
         .main-content {
@@ -110,17 +60,12 @@
             border-radius: 20px;
             padding: 30px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-        
-        .left-panel:hover, .right-panel:hover {
-            transform: translateY(-5px);
         }
         
         h2 {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             margin-bottom: 25px;
-            color: #4a6bff;
+            color: #2575fc;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -128,23 +73,15 @@
             border-bottom: 2px solid #f0f2ff;
         }
         
-        h2 i {
-            background: linear-gradient(to right, #4a6bff, #6c8eff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         
         label {
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: #555;
             font-weight: 600;
-            font-size: 1.05rem;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -152,32 +89,26 @@
         
         input, textarea {
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             background-color: #f8f9ff;
             border: 2px solid #e1e6ff;
             border-radius: 12px;
-            color: #333;
             font-size: 1rem;
             transition: all 0.3s ease;
         }
         
         input:focus, textarea:focus {
             outline: none;
-            border-color: #4a6bff;
+            border-color: #2575fc;
             background-color: white;
-            box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.1);
-        }
-        
-        textarea {
-            min-height: 140px;
-            resize: vertical;
+            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.1);
         }
         
         .btn {
-            background: linear-gradient(135deg, #4a6bff 0%, #6c8eff 100%);
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: white;
             border: none;
-            padding: 16px 30px;
+            padding: 16px;
             border-radius: 12px;
             font-size: 1.1rem;
             font-weight: 600;
@@ -188,563 +119,195 @@
             justify-content: center;
             gap: 12px;
             width: 100%;
-            box-shadow: 0 5px 15px rgba(74, 107, 255, 0.3);
         }
         
         .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(74, 107, 255, 0.4);
-        }
-        
-        .btn:active {
-            transform: translateY(0);
-        }
-        
-        .btn-secondary {
-            background: linear-gradient(135deg, #6c757d 0%, #868e96 100%);
-            padding: 12px 25px;
-            font-size: 1rem;
-            box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3);
-        }
-        
-        .btn-secondary:hover {
-            box-shadow: 0 6px 15px rgba(108, 117, 125, 0.4);
+            transform: translateY(-2px);
+            filter: brightness(1.1);
         }
         
         .stats {
             display: flex;
             justify-content: space-between;
             margin: 30px 0;
-            background: linear-gradient(135deg, #f8f9ff 0%, #eef1ff 100%);
+            background: #f8f9ff;
             padding: 20px;
             border-radius: 15px;
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
         }
         
-        .stat-item {
-            text-align: center;
-            flex: 1;
-        }
-        
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #4a6bff;
-            margin-bottom: 5px;
-        }
-        
-        .stat-label {
-            color: #666;
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
+        .stat-item { text-align: center; flex: 1; }
+        .stat-number { font-size: 1.8rem; font-weight: 800; color: #2575fc; }
+        .stat-label { color: #666; font-size: 0.8rem; text-transform: uppercase; }
         
         .task-list {
-            max-height: 500px;
+            max-height: 600px;
             overflow-y: auto;
             padding-right: 10px;
-        }
-        
-        .task-list::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        .task-list::-webkit-scrollbar-track {
-            background: #f0f2ff;
-            border-radius: 10px;
-        }
-        
-        .task-list::-webkit-scrollbar-thumb {
-            background: linear-gradient(to bottom, #4a6bff, #6c8eff);
-            border-radius: 10px;
         }
         
         .task-item {
             background: white;
             border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            border-left: 6px solid #4a6bff;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 6px solid #2575fc;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .task-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(74, 107, 255, 0.05) 0%, rgba(108, 142, 255, 0.05) 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .task-item:hover::before {
-            opacity: 1;
-        }
-        
-        .task-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.3s ease;
         }
         
         .task-item.completed {
             border-left-color: #00d68f;
-            background: linear-gradient(135deg, #f8fff8 0%, #f0f9f0 100%);
-        }
-        
-        .task-item.completed::before {
-            background: linear-gradient(135deg, rgba(0, 214, 143, 0.05) 0%, rgba(0, 184, 122, 0.05) 100%);
-        }
-        
-        .task-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
+            background: #f0f9f5;
+            opacity: 0.8;
         }
         
         .task-title {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            color: #2d3748;
-            word-break: break-word;
-            flex: 1;
-        }
-        
-        .task-item.completed .task-title {
-            color: #00a86b;
-            text-decoration: line-through;
+            margin-bottom: 5px;
         }
         
         .task-date {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #718096;
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            margin-bottom: 10px;
         }
         
         .task-description {
-            color: #4a5568;
-            line-height: 1.7;
-            margin-bottom: 20px;
-            word-break: break-word;
-            padding: 15px;
+            font-size: 0.9rem;
             background: #f8f9ff;
-            border-radius: 10px;
-            border-left: 4px solid #e1e6ff;
-        }
-        
-        .task-item.completed .task-description {
-            color: #68d391;
-            background: #f0f9f5;
-            border-left-color: #00d68f;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
         }
         
         .task-actions {
             display: flex;
-            gap: 15px;
-            margin-top: 20px;
+            gap: 10px;
         }
         
-        .btn-complete {
-            background: linear-gradient(135deg, #00d68f 0%, #00b87a 100%);
-            padding: 12px 25px;
-            font-size: 1rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 214, 143, 0.3);
-        }
+        .btn-complete { background: #00d68f; font-size: 0.85rem; padding: 10px; }
+        .btn-delete { background: #ff4757; font-size: 0.85rem; padding: 10px; }
         
-        .btn-complete:hover {
-            box-shadow: 0 6px 15px rgba(0, 214, 143, 0.4);
-        }
-        
-        .btn-delete {
-            background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
-            padding: 12px 25px;
-            font-size: 1rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3);
-        }
-        
-        .btn-delete:hover {
-            box-shadow: 0 6px 15px rgba(255, 71, 87, 0.4);
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #718096;
-        }
-        
-        .empty-state i {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #4a6bff, #6c8eff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            opacity: 0.7;
-        }
-        
-        .empty-state h3 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-            color: #4a5568;
-        }
-        
-        .empty-state p {
-            font-size: 1.1rem;
-            max-width: 400px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-        
-        .status-badge {
-            display: inline-block;
-            padding: 6px 15px;
+        .badge {
+            font-size: 0.65rem;
+            padding: 3px 10px;
             border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-left: 12px;
-            letter-spacing: 0.5px;
-        }
-        
-        .status-pending {
-            background: linear-gradient(135deg, #ffb347 0%, #ffcc33 100%);
+            margin-left: 8px;
             color: white;
+            font-weight: bold;
         }
-        
-        .status-completed {
-            background: linear-gradient(135deg, #00d68f 0%, #00b87a 100%);
-            color: white;
-        }
-        
-        .footer {
-            margin-top: 40px;
-            text-align: center;
-            padding: 20px;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.95rem;
-        }
-        
-        .footer a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-        
-        .footer a:hover {
-            color: #ffd166;
-            text-decoration: underline;
-        }
-        
-        @media (max-width: 768px) {
-            .main-content {
-                flex-direction: column;
-            }
-            
-            h1 {
-                font-size: 2.5rem;
-            }
-            
-            .left-panel, .right-panel {
-                min-width: 100%;
-            }
-            
-            .stats {
-                flex-direction: column;
-                gap: 20px;
-            }
-            
-            .task-actions {
-                flex-direction: column;
-            }
-            
-            .btn-complete, .btn-delete {
-                width: 100%;
-            }
-        }
-        
-        /* Animaciones */
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
-        
-        .task-item {
-            animation: fadeIn 0.4s ease forwards;
-        }
-        
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: white;
+            font-size: 0.9rem;
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-tasks"></i> Gestor de Tareas</h1>
-            <p class="subtitle">Organiza tus tareas de forma simple y bonita</p>
-            
-            <div class="instructions">
-                <h3><i class="fas fa-graduation-cap"></i> Perfecto para Organizar</h3>
-                <p><i class="fas fa-check-circle" style="color:#00d68f"></i> <strong>Funciona sin internet:</strong> Tus tareas se guardan en tu navegador</p>
-                <p><i class="fas fa-users" style="color:#4a6bff"></i> <strong>Comparte con amigos:</strong> Cada uno tiene su propia lista de tareas</p>
-                <p><i class="fas fa-mobile-alt" style="color:#ffb347"></i> <strong>Usa en cualquier dispositivo:</strong> Computadora, tablet o celular</p>
-                
-                <div style="margin-top: 20px; padding: 15px; background: #f0f7ff; border-radius: 10px;">
-                    <p><i class="fas fa-share-alt"></i> <strong>Comparte esta página:</strong></p>
-                    <div style="display: flex; gap: 10px; margin-top: 10px;">
-                        <code id="pageUrl" style="flex: 1;">Cargando enlace...</code>
-                        <button class="btn-secondary" onclick="copyUrl()">
-                            <i class="fas fa-copy"></i> Copiar
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <h1><i class="fas fa-check-double"></i> TaskMaster</h1>
+            <p class="subtitle">Gestión eficiente de tareas y proyectos</p>
         </header>
         
         <div class="main-content">
             <div class="left-panel">
-                <h2><i class="fas fa-plus-circle pulse"></i> Nueva Tarea</h2>
+                <h2><i class="fas fa-plus"></i> Nueva Tarea</h2>
                 <form id="taskForm">
                     <div class="form-group">
-                        <label for="taskTitle"><i class="fas fa-heading"></i> Título de la tarea</label>
-                        <input type="text" id="taskTitle" placeholder="Ej: Matemáticas - Ejercicios página 45" required>
+                        <label for="taskTitle"><i class="fas fa-pen"></i> Título</label>
+                        <input type="text" id="taskTitle" placeholder="Ej: Finalizar diseño de interfaz" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="taskDescription"><i class="fas fa-align-left"></i> Descripción (opcional)</label>
-                        <textarea id="taskDescription" placeholder="Detalles, fecha de entrega, materiales necesarios..."></textarea>
+                        <label for="taskDueDate"><i class="fas fa-calendar-day"></i> Fecha Límite</label>
+                        <input type="date" id="taskDueDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskDescription"><i class="fas fa-info-circle"></i> Descripción</label>
+                        <textarea id="taskDescription" placeholder="Detalles importantes..."></textarea>
                     </div>
                     
                     <button type="submit" class="btn">
-                        <i class="fas fa-plus"></i> Agregar Tarea
+                        <i class="fas fa-save"></i> Guardar Tarea
                     </button>
                 </form>
                 
                 <div class="stats">
                     <div class="stat-item">
                         <div class="stat-number" id="totalTasks">0</div>
-                        <div class="stat-label">Total Tareas</div>
+                        <div class="stat-label">Total</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number" id="completedTasks">0</div>
-                        <div class="stat-label">Completadas</div>
+                        <div class="stat-number" id="completedTasks" style="color:#00d68f">0</div>
+                        <div class="stat-label">Completas</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number" id="pendingTasks">0</div>
+                        <div class="stat-number" id="pendingTasks" style="color:#ffb347">0</div>
                         <div class="stat-label">Pendientes</div>
                     </div>
-                </div>
-                
-                <div style="margin-top: 25px;">
-                    <button class="btn-secondary" onclick="clearAllTasks()" style="width: 100%;">
-                        <i class="fas fa-trash-alt"></i> Limpiar Todas las Tareas
-                    </button>
                 </div>
             </div>
             
             <div class="right-panel">
-                <h2><i class="fas fa-list-check"></i> Mis Tareas</h2>
-                
-                <div class="task-list" id="taskList">
-                    <div class="empty-state">
-                        <i class="fas fa-clipboard-list"></i>
-                        <h3>¡No hay tareas aún!</h3>
-                        <p>Empieza agregando tu primera tarea usando el formulario</p>
-                    </div>
-                </div>
+                <h2><i class="fas fa-stream"></i> Mi Lista</h2>
+                <div class="task-list" id="taskList"></div>
             </div>
         </div>
-        
-        <div class="footer">
-            <p>Creado para tu comodidad • Comparte con tus amigos • 
-                <a href="#" onclick="sharePage()">
-                    <i class="fas fa-share-square"></i> Compartir página
-                </a>
-            </p>
-        </div>
+        <p class="footer">TaskMaster &copy; 2026 • Almacenamiento local privado</p>
     </div>
 
     <script>
-        // Mostrar URL actual
-        document.getElementById('pageUrl').textContent = window.location.href;
-        
-        // Funciones para compartir
-        function copyUrl() {
-            navigator.clipboard.writeText(window.location.href)
-                .then(() => {
-                    // Mostrar notificación bonita
-                    showNotification('¡Enlace copiado! Compártelo con tus amigos', 'success');
-                })
-                .catch(err => {
-                    console.error('Error copiando: ', err);
-                    showNotification('Error al copiar el enlace', 'error');
-                });
-        }
-        
-        function sharePage() {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Gestor de Tareas',
-                    text: 'Organiza tus tareas con esta app',
-                    url: window.location.href
-                })
-                .then(() => console.log('Compartido exitosamente'))
-                .catch(err => console.error('Error al compartir:', err));
-            } else {
-                copyUrl();
-            }
-        }
-        
-        function showNotification(message, type) {
-            // Crear elemento de notificación
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${type === 'success' ? '#00d68f' : '#ff4757'};
-                color: white;
-                padding: 15px 25px;
-                border-radius: 10px;
-                box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-                z-index: 1000;
-                animation: fadeIn 0.3s ease;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            `;
-            notification.innerHTML = `
-                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-                <span>${message}</span>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Remover después de 3 segundos
-            setTimeout(() => {
-                notification.style.animation = 'fadeIn 0.3s ease reverse';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-        }
-        
-        // Sistema de tareas
         const taskForm = document.getElementById('taskForm');
         const taskTitle = document.getElementById('taskTitle');
         const taskDescription = document.getElementById('taskDescription');
+        const taskDueDate = document.getElementById('taskDueDate');
         const taskList = document.getElementById('taskList');
-        const totalTasksElement = document.getElementById('totalTasks');
-        const completedTasksElement = document.getElementById('completedTasks');
-        const pendingTasksElement = document.getElementById('pendingTasks');
         
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        
+        let tasks = JSON.parse(localStorage.getItem('tasks_app')) || [];
+
         function saveTasks() {
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-            updateStats();
+            localStorage.setItem('tasks_app', JSON.stringify(tasks));
+            renderTasks();
         }
-        
-        function updateStats() {
-            const totalTasks = tasks.length;
-            const completedTasks = tasks.filter(task => task.completed).length;
-            const pendingTasks = totalTasks - completedTasks;
-            
-            totalTasksElement.textContent = totalTasks;
-            completedTasksElement.textContent = completedTasks;
-            pendingTasksElement.textContent = pendingTasks;
-            
-            // Actualizar colores de estadísticas
-            document.querySelectorAll('.stat-number').forEach((el, index) => {
-                if (index === 0) el.style.color = totalTasks > 0 ? '#4a6bff' : '#a0aec0';
-                if (index === 1) el.style.color = completedTasks > 0 ? '#00d68f' : '#a0aec0';
-                if (index === 2) el.style.color = pendingTasks > 0 ? '#ffb347' : '#a0aec0';
-            });
-        }
-        
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            const today = new Date();
-            const yesterday = new Date(today);
-            yesterday.setDate(yesterday.getDate() - 1);
-            
-            if (date.toDateString() === today.toDateString()) {
-                return `Hoy, ${date.toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'})}`;
-            } else if (date.toDateString() === yesterday.toDateString()) {
-                return `Ayer, ${date.toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'})}`;
-            } else {
-                return date.toLocaleDateString('es-ES', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-            }
-        }
-        
+
         function renderTasks() {
             if (tasks.length === 0) {
-                taskList.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-clipboard-list"></i>
-                        <h3>¡No hay tareas aún!</h3>
-                        <p>Empieza agregando tu primera tarea usando el formulario</p>
-                    </div>
-                `;
+                taskList.innerHTML = '<div style="text-align:center; padding:40px; color:#a0aec0"><i class="fas fa-ghost" style="font-size:3rem; display:block; margin-bottom:10px"></i><p>No hay tareas pendientes.</p></div>';
+                updateStats();
                 return;
             }
-            
-            // Ordenar tareas: pendientes primero, luego completadas
-            const sortedTasks = [...tasks].sort((a, b) => {
-                if (a.completed && !b.completed) return 1;
-                if (!a.completed && b.completed) return -1;
-                return new Date(b.createdAt) - new Date(a.createdAt);
-            });
-            
+
+            const sortedTasks = [...tasks].sort((a, b) => a.completed - b.completed);
+
             taskList.innerHTML = sortedTasks.map(task => `
-                <div class="task-item ${task.completed ? 'completed' : ''}" data-id="${task.id}">
-                    <div class="task-header">
-                        <div style="flex: 1;">
-                            <div class="task-title">${task.title} 
-                                <span class="status-badge ${task.completed ? 'status-completed' : 'status-pending'}">
-                                    ${task.completed ? 'COMPLETADA' : 'PENDIENTE'}
-                                </span>
-                            </div>
-                            <div class="task-date">
-                                <i class="far fa-calendar"></i> ${formatDate(task.createdAt)}
-                            </div>
-                        </div>
+                <div class="task-item ${task.completed ? 'completed' : ''}">
+                    <div class="task-title">
+                        ${task.title}
+                        <span class="badge" style="background:${task.completed ? '#00d68f' : '#ffb347'}">
+                            ${task.completed ? 'FINALIZADA' : 'PENDIENTE'}
+                        </span>
                     </div>
-                    
-                    ${task.description ? `
-                        <div class="task-description">
-                            ${task.description}
-                        </div>
-                    ` : ''}
-                    
+                    <div class="task-date">
+                        <i class="far fa-clock"></i> Registro: ${new Date(task.createdAt).toLocaleDateString()}
+                        ${task.dueDate ? ` | <span style="color:#e53e3e; font-weight:bold"><i class="fas fa-hourglass-half"></i> Límite: ${task.dueDate}</span>` : ''}
+                    </div>
+                    ${task.description ? `<div class="task-description">${task.description}</div>` : ''}
                     <div class="task-actions">
                         ${!task.completed ? `
                             <button class="btn btn-complete complete-task" data-id="${task.id}">
-                                <i class="fas fa-check"></i> Marcar como Listo
+                                <i class="fas fa-check"></i> Completar
                             </button>
                         ` : ''}
                         <button class="btn btn-delete delete-task" data-id="${task.id}">
@@ -756,109 +319,51 @@
             
             updateStats();
         }
-        
-        function addTask(title, description) {
+
+        function updateStats() {
+            const total = tasks.length;
+            const completed = tasks.filter(t => t.completed).length;
+            document.getElementById('totalTasks').textContent = total;
+            document.getElementById('completedTasks').textContent = completed;
+            document.getElementById('pendingTasks').textContent = total - completed;
+        }
+
+        taskForm.addEventListener('submit', (e) => {
+            e.preventDefault();
             const newTask = {
                 id: Date.now(),
-                title,
-                description,
+                title: taskTitle.value,
+                description: taskDescription.value,
+                dueDate: taskDueDate.value,
                 completed: false,
                 createdAt: new Date().toISOString()
             };
-            
             tasks.push(newTask);
             saveTasks();
-            renderTasks();
-            
-            // Mostrar notificación
-            showNotification('¡Tarea agregada correctamente!', 'success');
-            
-            // Enfocar en el campo de título
+            taskForm.reset();
             taskTitle.focus();
-        }
-        
-        function completeTask(taskId) {
-            tasks = tasks.map(task => {
-                if (task.id === taskId) {
-                    return { ...task, completed: true, completedAt: new Date().toISOString() };
+        });
+
+        taskList.addEventListener('click', (e) => {
+            const completeBtn = e.target.closest('.complete-task');
+            const deleteBtn = e.target.closest('.delete-task');
+
+            if (completeBtn) {
+                const id = parseInt(completeBtn.dataset.id);
+                tasks = tasks.map(t => t.id === id ? {...t, completed: true} : t);
+                saveTasks();
+            }
+
+            if (deleteBtn) {
+                const id = parseInt(deleteBtn.dataset.id);
+                if(confirm('¿Eliminar esta tarea permanentemente?')) {
+                    tasks = tasks.filter(t => t.id !== id);
+                    saveTasks();
                 }
-                return task;
-            });
-            
-            saveTasks();
-            renderTasks();
-            showNotification('¡Tarea marcada como completada!', 'success');
-        }
-        
-        function deleteTask(taskId) {
-            if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
-                tasks = tasks.filter(task => task.id !== taskId);
-                saveTasks();
-                renderTasks();
-                showNotification('Tarea eliminada', 'error');
-            }
-        }
-        
-        function clearAllTasks() {
-            if (tasks.length === 0) {
-                showNotification('No hay tareas para eliminar', 'error');
-                return;
-            }
-            
-            if (confirm('¿Estás seguro de que quieres eliminar TODAS las tareas? Esta acción no se puede deshacer.')) {
-                tasks = [];
-                saveTasks();
-                renderTasks();
-                showNotification('Todas las tareas han sido eliminadas', 'error');
-            }
-        }
-        
-        // Event Listeners
-        taskForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const title = taskTitle.value.trim();
-            const description = taskDescription.value.trim();
-            
-            if (title) {
-                addTask(title, description);
-                
-                // Limpiar formulario
-                taskTitle.value = '';
-                taskDescription.value = '';
-            } else {
-                showNotification('Por favor, escribe un título para la tarea', 'error');
-                taskTitle.focus();
             }
         });
-        
-        // Delegación de eventos para los botones
-        taskList.addEventListener('click', function(e) {
-            let target = e.target;
-            
-            // Buscar el botón correcto si se hizo clic en un icono
-            if (!target.classList.contains('complete-task') && !target.classList.contains('delete-task')) {
-                target = target.closest('.complete-task') || target.closest('.delete-task');
-            }
-            
-            if (!target) return;
-            
-            const taskId = parseInt(target.dataset.id);
-            
-            if (target.classList.contains('complete-task')) {
-                completeTask(taskId);
-            } else if (target.classList.contains('delete-task')) {
-                deleteTask(taskId);
-            }
-        });
-        
-        // Cargar tareas al iniciar
+
         renderTasks();
-        
-        // Enfocar en el campo de título al cargar la página
-        window.addEventListener('load', function() {
-            taskTitle.focus();
-        });
     </script>
 </body>
 </html>
