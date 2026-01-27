@@ -6,7 +6,6 @@
     <title>TaskMaster Pro</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="apple-touch-icon" href="logo.png">
-    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -19,45 +18,41 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        
         body { background: var(--bg); color: var(--text); padding: 20px; }
-
         .container { max-width: 1000px; margin: 0 auto; }
-
         header { text-align: center; margin-bottom: 30px; }
         
-        /* Contenedor Principal */
         .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
         @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
 
         .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
-
         h2 { font-size: 1.2rem; margin-bottom: 15px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
 
-        /* Formulario */
-        .form-group { margin-bottom: 15px; }
+        .form-group { margin-bottom: 12px; }
         label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; }
         input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; }
+        textarea { resize: vertical; min-height: 60px; }
 
         .btn { border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
         .btn-primary { background: var(--primary); color: white; width: 100%; justify-content: center; }
         .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); font-size: 0.8rem; }
-        .btn-danger { background: var(--danger); color: white; padding: 5px 10px; font-size: 0.8rem; }
+        .btn-danger { background: var(--danger); color: white; padding: 8px; }
 
-        /* Filtros y Carpetas */
-        .folder-list { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-        .folder-chip { padding: 5px 15px; background: #eee; border-radius: 20px; cursor: pointer; font-size: 0.85rem; transition: 0.3s; }
+        .folder-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .folder-chip { padding: 6px 14px; background: #e2e8f0; border-radius: 20px; cursor: pointer; font-size: 0.8rem; font-weight: 500; }
         .folder-chip.active { background: var(--primary); color: white; }
 
-        /* Lista de Tareas */
-        .task-item { border-left: 5px solid var(--primary); padding: 15px; background: #fff; border-radius: 10px; margin-bottom: 10px; position: relative; border: 1px solid #f0f0f0; border-left: 5px solid var(--primary); }
-        .task-item.completed { opacity: 0.6; border-left-color: var(--success); text-decoration: line-through; }
-        .task-info { margin-bottom: 10px; }
-        .task-meta { font-size: 0.75rem; color: #777; display: flex; gap: 15px; }
+        .task-item { background: #fff; border-radius: 12px; margin-bottom: 12px; padding: 15px; border: 1px solid #edf2f7; border-left: 5px solid var(--primary); transition: 0.2s; }
+        .task-item.completed { opacity: 0.6; border-left-color: var(--success); }
+        
+        .task-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        .task-title { font-weight: 700; font-size: 1.05rem; }
+        .task-desc { font-size: 0.9rem; color: #4a5568; background: #f8fafc; padding: 8px; border-radius: 6px; margin: 8px 0; }
+        
+        .task-meta { font-size: 0.75rem; color: #718096; display: flex; flex-wrap: wrap; gap: 12px; }
         .urgent { color: var(--danger); font-weight: bold; }
 
-        /* Zona de Respaldo */
-        .backup-controls { display: flex; gap: 10px; margin-top: 20px; }
+        .backup-controls { display: flex; gap: 10px; margin-top: 15px; }
         #fileInput { display: none; }
     </style>
 </head>
@@ -66,36 +61,40 @@
 <div class="container">
     <header>
         <h1>TaskMaster Pro</h1>
-        <p>Organización avanzada y persistente</p>
+        <p>Tu centro de organización personal</p>
     </header>
 
     <div class="grid">
         <div class="sidebar">
             <div class="card">
-                <h2><i class="fas fa-plus"></i> Nueva Tarea</h2>
+                <h2><i class="fas fa-plus-circle"></i> Nueva Tarea</h2>
                 <form id="taskForm">
                     <div class="form-group">
                         <label>Título</label>
-                        <input type="text" id="taskTitle" required placeholder="Ej: Estudiar verbos">
+                        <input type="text" id="taskTitle" required placeholder="Nombre de la tarea">
                     </div>
                     <div class="form-group">
                         <label>Carpeta / Grupo</label>
-                        <input type="text" id="taskFolder" list="folderSuggestions" placeholder="Ej: Castellano, Trabajo...">
+                        <input type="text" id="taskFolder" list="folderSuggestions" placeholder="Ej: Trabajo, Personal...">
                         <datalist id="folderSuggestions"></datalist>
                     </div>
                     <div class="form-group">
-                        <label>Fecha Entrega</label>
+                        <label>Fecha Límite</label>
                         <input type="date" id="taskDueDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción / Notas</label>
+                        <textarea id="taskDesc" placeholder="Detalles adicionales..."></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Añadir Tarea</button>
                 </form>
             </div>
 
             <div class="card">
-                <h2><i class="fas fa-database"></i> Backup</h2>
+                <h2><i class="fas fa-copy"></i> Respaldo</h2>
                 <div class="backup-controls">
-                    <button class="btn btn-outline" onclick="exportData()"><i class="fas fa-download"></i> Exportar</button>
-                    <button class="btn btn-outline" onclick="document.getElementById('fileInput').click()"><i class="fas fa-upload"></i> Importar</button>
+                    <button class="btn btn-outline" onclick="exportData()">Exportar JSON</button>
+                    <button class="btn btn-outline" onclick="document.getElementById('fileInput').click()">Importar</button>
                 </div>
                 <input type="file" id="fileInput" accept=".json">
             </div>
@@ -103,19 +102,15 @@
 
         <div class="main-list">
             <div class="card">
-                <h2><i class="fas fa-folder-open"></i> Filtrar por Carpeta</h2>
-                <div class="folder-list" id="folderFilters">
-                    </div>
+                <h2><i class="fas fa-filter"></i> Filtrar Carpetas</h2>
+                <div class="folder-list" id="folderFilters"></div>
             </div>
-
-            <div id="taskList">
-                </div>
+            <div id="taskList"></div>
         </div>
     </div>
 </div>
 
 <script>
-    // 4. PERSISTENCIA: Cargar datos al iniciar
     let tasks = JSON.parse(localStorage.getItem('tm_pro_data')) || [];
     let currentFilter = 'todas';
 
@@ -129,7 +124,6 @@
         render();
     }
 
-    // 2. ORDENACIÓN: Por fecha (más cercana primero)
     function sortTasks(taskArr) {
         return taskArr.sort((a, b) => {
             if (a.completed !== b.completed) return a.completed - b.completed;
@@ -140,9 +134,7 @@
     }
 
     function render() {
-        // Actualizar sugerencias de carpetas y filtros
-        const folders = [...new Set(tasks.map(t => t.folder || 'Sin Carpeta'))];
-        
+        const folders = [...new Set(tasks.map(t => t.folder || 'General'))];
         folderFilters.innerHTML = `<div class="folder-chip ${currentFilter === 'todas' ? 'active' : ''}" onclick="filterBy('todas')">Todas</div>`;
         folderSuggestions.innerHTML = '';
         
@@ -151,46 +143,46 @@
             folderSuggestions.innerHTML += `<option value="${f}">`;
         });
 
-        // Filtrar tareas
         let filtered = currentFilter === 'todas' ? tasks : tasks.filter(t => t.folder === currentFilter);
-        
-        // Ordenar
         filtered = sortTasks(filtered);
 
-        taskList.innerHTML = filtered.length === 0 ? '<p style="text-align:center">No hay tareas en esta sección.</p>' : 
+        taskList.innerHTML = filtered.length === 0 ? '<p style="text-align:center; padding:20px;">No hay tareas aquí.</p>' : 
             filtered.map(t => {
                 const isUrgent = t.dueDate && new Date(t.dueDate) < new Date() && !t.completed;
                 return `
                 <div class="task-item ${t.completed ? 'completed' : ''}">
-                    <div class="task-info">
-                        <strong>${t.title}</strong>
-                        <div class="task-meta">
-                            <span><i class="fas fa-folder"></i> ${t.folder || 'General'}</span>
-                            <span class="${isUrgent ? 'urgent' : ''}">
-                                <i class="fas fa-calendar"></i> ${t.dueDate || 'Sin fecha'}
-                            </span>
+                    <div class="task-header">
+                        <div class="task-title">${t.title}</div>
+                        <div style="display:flex; gap:8px">
+                            <button class="btn btn-outline" style="padding:5px 10px" onclick="toggleTask(${t.id})">
+                                <i class="fas ${t.completed ? 'fa-undo' : 'fa-check'}"></i>
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteTask(${t.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
                     </div>
-                    <div style="display:flex; gap:10px">
-                        <button class="btn btn-outline" onclick="toggleTask(${t.id})">
-                            <i class="fas ${t.completed ? 'fa-undo' : 'fa-check'}"></i>
-                        </button>
-                        <button class="btn btn-danger" onclick="deleteTask(${t.id})">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                    
+                    ${t.description ? `<div class="task-desc">${t.description}</div>` : ''}
+                    
+                    <div class="task-meta">
+                        <span><i class="fas fa-folder"></i> ${t.folder || 'General'}</span>
+                        <span class="${isUrgent ? 'urgent' : ''}">
+                            <i class="fas fa-calendar-alt"></i> ${t.dueDate || 'Sin fecha'}
+                        </span>
                     </div>
                 </div>
             `}).join('');
     }
 
-    // Eventos
     taskForm.onsubmit = (e) => {
         e.preventDefault();
         const newTask = {
             id: Date.now(),
             title: document.getElementById('taskTitle').value,
-            folder: document.getElementById('taskFolder').value || 'Sin Carpeta',
+            folder: document.getElementById('taskFolder').value || 'General',
             dueDate: document.getElementById('taskDueDate').value,
+            description: document.getElementById('taskDesc').value,
             completed: false
         };
         tasks.push(newTask);
@@ -204,7 +196,7 @@
     };
 
     const deleteTask = (id) => {
-        if(confirm('¿Eliminar tarea?')) {
+        if(confirm('¿Borrar tarea?')) {
             tasks = tasks.filter(t => t.id !== id);
             saveData();
         }
@@ -215,38 +207,26 @@
         render();
     };
 
-    // 1. EXPORTAR / IMPORTAR
     function exportData() {
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks));
-        const downloadAnchorNode = document.createElement('a');
-        downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", "mis_tareas.json");
-        document.body.appendChild(downloadAnchorNode);
-        downloadAnchorNode.click();
-        downloadAnchorNode.remove();
+        const dl = document.createElement('a');
+        dl.setAttribute("href", dataStr);
+        dl.setAttribute("download", "backup_tareas.json");
+        dl.click();
     }
 
     document.getElementById('fileInput').onchange = (e) => {
         const file = e.target.files[0];
         const reader = new FileReader();
         reader.onload = (event) => {
-            try {
-                const imported = JSON.parse(event.target.result);
-                if(Array.isArray(imported)) {
-                    tasks = imported;
-                    saveData();
-                    alert('¡Importación exitosa!');
-                }
-            } catch (err) {
-                alert('Archivo no válido');
-            }
+            tasks = JSON.parse(event.target.result);
+            saveData();
+            alert('¡Importado!');
         };
         reader.readAsText(file);
     };
 
-    // Render inicial
     render();
 </script>
-
 </body>
 </html>
