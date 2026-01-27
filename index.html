@@ -15,6 +15,7 @@
             --text: #333;
             --danger: #ff4757;
             --success: #00d68f;
+            --edit: #ffa502;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
@@ -25,18 +26,20 @@
         .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
         @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
 
-        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; position: sticky; top: 20px; }
         h2 { font-size: 1.2rem; margin-bottom: 15px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
 
         .form-group { margin-bottom: 12px; }
         label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; background: #fff; }
         textarea { resize: vertical; min-height: 60px; }
 
         .btn { border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
         .btn-primary { background: var(--primary); color: white; width: 100%; justify-content: center; }
+        .btn-edit-mode { background: var(--edit); color: white; width: 100%; justify-content: center; }
         .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); font-size: 0.8rem; }
         .btn-danger { background: var(--danger); color: white; padding: 8px; }
+        .btn-edit { background: var(--edit); color: white; padding: 8px; }
 
         .folder-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
         .folder-chip { padding: 6px 14px; background: #e2e8f0; border-radius: 20px; cursor: pointer; font-size: 0.8rem; font-weight: 500; }
@@ -47,13 +50,16 @@
         
         .task-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
         .task-title { font-weight: 700; font-size: 1.05rem; }
-        .task-desc { font-size: 0.9rem; color: #4a5568; background: #f8fafc; padding: 8px; border-radius: 6px; margin: 8px 0; }
+        .task-desc { font-size: 0.9rem; color: #4a5568; background: #f8fafc; padding: 8px; border-radius: 6px; margin: 8px 0; border: 1px dashed #e2e8f0; }
         
-        .task-meta { font-size: 0.75rem; color: #718096; display: flex; flex-wrap: wrap; gap: 12px; }
+        .task-meta { font-size: 0.75rem; color: #718096; display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
         .urgent { color: var(--danger); font-weight: bold; }
 
         .backup-controls { display: flex; gap: 10px; margin-top: 15px; }
         #fileInput { display: none; }
+
+        /* Indicador de modo edición */
+        .editing-indicator { display: none; background: #fff3cd; color: #856404; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 0.8rem; border: 1px solid #ffeeba; }
     </style>
 </head>
 <body>
@@ -67,16 +73,22 @@
     <div class="grid">
         <div class="sidebar">
             <div class="card">
-                <h2><i class="fas fa-plus-circle"></i> Nueva Tarea</h2>
+                <h2 id="formTitle"><i class="fas fa-plus-circle"></i> Nueva Tarea</h2>
+                <div id="editingMsg" class="editing-indicator">
+                    <i class="fas fa-info-circle"></i> Estás editando una tarea.
+                    <button onclick="cancelEdit()" style="background:none; border:none; color:blue; text-decoration:underline; cursor:pointer; margin-left:5px">Cancelar</button>
+                </div>
                 <form id="taskForm">
+                    <input type="hidden" id="editTaskId">
                     <div class="form-group">
                         <label>Título</label>
                         <input type="text" id="taskTitle" required placeholder="Nombre de la tarea">
                     </div>
                     <div class="form-group">
                         <label>Carpeta / Grupo</label>
-                        <input type="text" id="taskFolder" list="folderSuggestions" placeholder="Ej: Trabajo, Personal...">
-                        <datalist id="folderSuggestions"></datalist>
+                        <select id="taskFolderSelect" onchange="checkNewFolder(this)">
+                            </select>
+                        <input type="text" id="taskFolderNew" placeholder="Nombre de nueva carpeta" style="margin-top:8px; display:none">
                     </div>
                     <div class="form-group">
                         <label>Fecha Límite</label>
@@ -86,14 +98,14 @@
                         <label>Descripción / Notas</label>
                         <textarea id="taskDesc" placeholder="Detalles adicionales..."></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Añadir Tarea</button>
+                    <button type="submit" id="submitBtn" class="btn btn-primary">Añadir Tarea</button>
                 </form>
             </div>
 
             <div class="card">
                 <h2><i class="fas fa-copy"></i> Respaldo</h2>
                 <div class="backup-controls">
-                    <button class="btn btn-outline" onclick="exportData()">Exportar JSON</button>
+                    <button class="btn btn-outline" onclick="exportData()">Exportar</button>
                     <button class="btn btn-outline" onclick="document.getElementById('fileInput').click()">Importar</button>
                 </div>
                 <input type="file" id="fileInput" accept=".json">
@@ -113,58 +125,78 @@
 <script>
     let tasks = JSON.parse(localStorage.getItem('tm_pro_data')) || [];
     let currentFilter = 'todas';
+    let editMode = false;
 
     const taskForm = document.getElementById('taskForm');
     const taskList = document.getElementById('taskList');
     const folderFilters = document.getElementById('folderFilters');
-    const folderSuggestions = document.getElementById('folderSuggestions');
+    const taskFolderSelect = document.getElementById('taskFolderSelect');
+    const taskFolderNew = document.getElementById('taskFolderNew');
 
     function saveData() {
         localStorage.setItem('tm_pro_data', JSON.stringify(tasks));
         render();
     }
 
-    function sortTasks(taskArr) {
-        return taskArr.sort((a, b) => {
+    function checkNewFolder(select) {
+        if(select.value === "NUEVA") {
+            taskFolderNew.style.display = "block";
+            taskFolderNew.required = true;
+        } else {
+            taskFolderNew.style.display = "none";
+            taskFolderNew.required = false;
+        }
+    }
+
+    function updateFolderOptions() {
+        const folders = [...new Set(tasks.map(t => t.folder || 'General'))];
+        let options = `<option value="General">General</option>`;
+        folders.forEach(f => {
+            if(f !== "General") options += `<option value="${f}">${f}</option>`;
+        });
+        options += `<option value="NUEVA" style="font-weight:bold; color:var(--primary)">+ Nueva Carpeta...</option>`;
+        taskFolderSelect.innerHTML = options;
+    }
+
+    function render() {
+        // Filtros de carpeta
+        const folders = [...new Set(tasks.map(t => t.folder || 'General'))];
+        folderFilters.innerHTML = `<div class="folder-chip ${currentFilter === 'todas' ? 'active' : ''}" onclick="filterBy('todas')">Todas</div>`;
+        folders.forEach(f => {
+            folderFilters.innerHTML += `<div class="folder-chip ${currentFilter === f ? 'active' : ''}" onclick="filterBy('${f}')">${f}</div>`;
+        });
+
+        updateFolderOptions();
+
+        // Filtrado y Ordenación
+        let filtered = currentFilter === 'todas' ? tasks : tasks.filter(t => t.folder === currentFilter);
+        filtered.sort((a, b) => {
             if (a.completed !== b.completed) return a.completed - b.completed;
             if (!a.dueDate) return 1;
             if (!b.dueDate) return -1;
             return new Date(a.dueDate) - new Date(b.dueDate);
         });
-    }
 
-    function render() {
-        const folders = [...new Set(tasks.map(t => t.folder || 'General'))];
-        folderFilters.innerHTML = `<div class="folder-chip ${currentFilter === 'todas' ? 'active' : ''}" onclick="filterBy('todas')">Todas</div>`;
-        folderSuggestions.innerHTML = '';
-        
-        folders.forEach(f => {
-            folderFilters.innerHTML += `<div class="folder-chip ${currentFilter === f ? 'active' : ''}" onclick="filterBy('${f}')">${f}</div>`;
-            folderSuggestions.innerHTML += `<option value="${f}">`;
-        });
-
-        let filtered = currentFilter === 'todas' ? tasks : tasks.filter(t => t.folder === currentFilter);
-        filtered = sortTasks(filtered);
-
-        taskList.innerHTML = filtered.length === 0 ? '<p style="text-align:center; padding:20px;">No hay tareas aquí.</p>' : 
+        taskList.innerHTML = filtered.length === 0 ? '<p style="text-align:center; padding:20px;">Lista vacía.</p>' : 
             filtered.map(t => {
                 const isUrgent = t.dueDate && new Date(t.dueDate) < new Date() && !t.completed;
                 return `
                 <div class="task-item ${t.completed ? 'completed' : ''}">
                     <div class="task-header">
                         <div class="task-title">${t.title}</div>
-                        <div style="display:flex; gap:8px">
-                            <button class="btn btn-outline" style="padding:5px 10px" onclick="toggleTask(${t.id})">
+                        <div style="display:flex; gap:5px">
+                            <button class="btn btn-outline" style="padding:5px 8px" onclick="toggleTask(${t.id})">
                                 <i class="fas ${t.completed ? 'fa-undo' : 'fa-check'}"></i>
                             </button>
-                            <button class="btn btn-danger" onclick="deleteTask(${t.id})">
+                            <button class="btn btn-edit" style="padding:5px 8px" onclick="startEdit(${t.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger" style="padding:5px 8px" onclick="deleteTask(${t.id})">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </div>
-                    
                     ${t.description ? `<div class="task-desc">${t.description}</div>` : ''}
-                    
                     <div class="task-meta">
                         <span><i class="fas fa-folder"></i> ${t.folder || 'General'}</span>
                         <span class="${isUrgent ? 'urgent' : ''}">
@@ -177,52 +209,84 @@
 
     taskForm.onsubmit = (e) => {
         e.preventDefault();
-        const newTask = {
-            id: Date.now(),
-            title: document.getElementById('taskTitle').value,
-            folder: document.getElementById('taskFolder').value || 'General',
-            dueDate: document.getElementById('taskDueDate').value,
-            description: document.getElementById('taskDesc').value,
-            completed: false
-        };
-        tasks.push(newTask);
-        taskForm.reset();
-        saveData();
-    };
+        
+        let folderName = taskFolderSelect.value;
+        if(folderName === "NUEVA") folderName = taskFolderNew.value;
 
-    const toggleTask = (id) => {
-        tasks = tasks.map(t => t.id === id ? {...t, completed: !t.completed} : t);
-        saveData();
-    };
-
-    const deleteTask = (id) => {
-        if(confirm('¿Borrar tarea?')) {
-            tasks = tasks.filter(t => t.id !== id);
-            saveData();
+        if (editMode) {
+            const id = parseInt(document.getElementById('editTaskId').value);
+            tasks = tasks.map(t => t.id === id ? {
+                ...t,
+                title: document.getElementById('taskTitle').value,
+                folder: folderName,
+                dueDate: document.getElementById('taskDueDate').value,
+                description: document.getElementById('taskDesc').value
+            } : t);
+            cancelEdit();
+        } else {
+            tasks.push({
+                id: Date.now(),
+                title: document.getElementById('taskTitle').value,
+                folder: folderName,
+                dueDate: document.getElementById('taskDueDate').value,
+                description: document.getElementById('taskDesc').value,
+                completed: false
+            });
         }
+        
+        taskForm.reset();
+        taskFolderNew.style.display = "none";
+        saveData();
     };
 
-    const filterBy = (folder) => {
-        currentFilter = folder;
-        render();
-    };
+    function startEdit(id) {
+        const t = tasks.find(task => task.id === id);
+        if(!t) return;
+
+        editMode = true;
+        document.getElementById('editTaskId').value = t.id;
+        document.getElementById('taskTitle').value = t.title;
+        document.getElementById('taskDueDate').value = t.dueDate;
+        document.getElementById('taskDesc').value = t.description;
+        
+        // Cargar carpeta en el select
+        taskFolderSelect.value = t.folder;
+        taskFolderNew.style.display = "none";
+        
+        // Estética del formulario
+        document.getElementById('formTitle').innerHTML = '<i class="fas fa-edit"></i> Editando Tarea';
+        document.getElementById('submitBtn').textContent = "Actualizar Tarea";
+        document.getElementById('submitBtn').className = "btn btn-edit-mode";
+        document.getElementById('editingMsg').style.display = "block";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function cancelEdit() {
+        editMode = false;
+        taskForm.reset();
+        document.getElementById('formTitle').innerHTML = '<i class="fas fa-plus-circle"></i> Nueva Tarea';
+        document.getElementById('submitBtn').textContent = "Añadir Tarea";
+        document.getElementById('submitBtn').className = "btn btn-primary";
+        document.getElementById('editingMsg').style.display = "none";
+        taskFolderNew.style.display = "none";
+    }
+
+    const toggleTask = (id) => { tasks = tasks.map(t => t.id === id ? {...t, completed: !t.completed} : t); saveData(); };
+    const deleteTask = (id) => { if(confirm('¿Borrar tarea?')) { tasks = tasks.filter(t => t.id !== id); saveData(); } };
+    const filterBy = (folder) => { currentFilter = folder; render(); };
 
     function exportData() {
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks));
         const dl = document.createElement('a');
         dl.setAttribute("href", dataStr);
-        dl.setAttribute("download", "backup_tareas.json");
+        dl.setAttribute("download", "backup_taskmaster.json");
         dl.click();
     }
 
     document.getElementById('fileInput').onchange = (e) => {
         const file = e.target.files[0];
         const reader = new FileReader();
-        reader.onload = (event) => {
-            tasks = JSON.parse(event.target.result);
-            saveData();
-            alert('¡Importado!');
-        };
+        reader.onload = (event) => { tasks = JSON.parse(event.target.result); saveData(); };
         reader.readAsText(file);
     };
 
