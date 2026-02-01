@@ -16,6 +16,7 @@
             --danger: #ff4757;
             --success: #00d68f;
             --edit: #ffa502;
+            --global: #6366f1; /* Color para tareas globales */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
@@ -47,6 +48,8 @@
 
         .task-item { background: #fff; border-radius: 12px; margin-bottom: 12px; padding: 15px; border: 1px solid #edf2f7; border-left: 5px solid var(--primary); transition: 0.2s; }
         .task-item.completed { opacity: 0.6; border-left-color: var(--success); }
+        /* Estilo para tarea global */
+        .task-item.global-task { border-left-color: var(--global); border-style: double; border-left-width: 8px; }
         
         .task-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
         .task-title { font-weight: 700; font-size: 1.05rem; }
@@ -58,7 +61,6 @@
         .backup-controls { display: flex; gap: 10px; margin-top: 15px; }
         #fileInput { display: none; }
 
-        /* Indicador de modo edición */
         .editing-indicator { display: none; background: #fff3cd; color: #856404; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 0.8rem; border: 1px solid #ffeeba; }
     </style>
 </head>
@@ -94,7 +96,7 @@
                         <label>Fecha Límite</label>
                         <input type="date" id="taskDueDate">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group)
                         <label>Descripción / Notas</label>
                         <textarea id="taskDesc" placeholder="Detalles adicionales..."></textarea>
                     </div>
@@ -124,6 +126,7 @@
 
 <script>
     let tasks = JSON.parse(localStorage.getItem('tm_pro_data')) || [];
+    let globalTasks = []; // Nueva variable para tareas del archivo externo
     let currentFilter = 'todas';
     let editMode = false;
 
@@ -133,8 +136,36 @@
     const taskFolderSelect = document.getElementById('taskFolderSelect');
     const taskFolderNew = document.getElementById('taskFolderNew');
 
+    // FUNCIÓN NUEVA: Cargar tareas desde el archivo global
+    async function fetchGlobalTasks() {
+        try {
+            const response = await fetch('global_tasks.json');
+            if (response.ok) {
+                const data = await response.json();
+                // Verificamos si el usuario ya marcó alguna global como hecha en este navegador
+                const globalStatus = JSON.parse(localStorage.getItem('tm_pro_global_status')) || {};
+                globalTasks = data.map(t => ({
+                    ...t,
+                    id: t.id, // IDs deben ser únicos en el JSON (ej: "g1", "g2")
+                    completed: globalStatus[t.id] || false,
+                    isGlobal: true
+                }));
+            }
+        } catch (e) {
+            console.log("No se encontró archivo de tareas globales o error de red.");
+        }
+        render();
+    }
+
     function saveData() {
-        localStorage.setItem('tm_pro_data', JSON.stringify(tasks));
+        // Solo guardamos las tareas locales (las que no tienen isGlobal)
+        localStorage.setItem('tm_pro_data', JSON.stringify(tasks.filter(t => !t.isGlobal)));
+        
+        // Guardamos el estado de las globales por separado para no "romper" nada
+        const globalStatus = {};
+        globalTasks.forEach(t => { if(t.completed) globalStatus[t.id] = true; });
+        localStorage.setItem('tm_pro_global_status', JSON.stringify(globalStatus));
+        
         render();
     }
 
@@ -149,7 +180,8 @@
     }
 
     function updateFolderOptions() {
-        const folders = [...new Set(tasks.map(t => t.folder || 'General'))];
+        const allCurrentTasks = [...tasks, ...globalTasks];
+        const folders = [...new Set(allCurrentTasks.map(t => t.folder || 'General'))];
         let options = `<option value="General">General</option>`;
         folders.forEach(f => {
             if(f !== "General") options += `<option value="${f}">${f}</option>`;
@@ -159,8 +191,10 @@
     }
 
     function render() {
+        const allTasks = [...tasks, ...globalTasks];
+        
         // Filtros de carpeta
-        const folders = [...new Set(tasks.map(t => t.folder || 'General'))];
+        const folders = [...new Set(allTasks.map(t => t.folder || 'General'))];
         folderFilters.innerHTML = `<div class="folder-chip ${currentFilter === 'todas' ? 'active' : ''}" onclick="filterBy('todas')">Todas</div>`;
         folders.forEach(f => {
             folderFilters.innerHTML += `<div class="folder-chip ${currentFilter === f ? 'active' : ''}" onclick="filterBy('${f}')">${f}</div>`;
@@ -168,8 +202,8 @@
 
         updateFolderOptions();
 
-        // Filtrado y Ordenación
-        let filtered = currentFilter === 'todas' ? tasks : tasks.filter(t => t.folder === currentFilter);
+        let filtered = currentFilter === 'todas' ? allTasks : allTasks.filter(t => t.folder === currentFilter);
+        
         filtered.sort((a, b) => {
             if (a.completed !== b.completed) return a.completed - b.completed;
             if (!a.dueDate) return 1;
@@ -180,20 +214,27 @@
         taskList.innerHTML = filtered.length === 0 ? '<p style="text-align:center; padding:20px;">Lista vacía.</p>' : 
             filtered.map(t => {
                 const isUrgent = t.dueDate && new Date(t.dueDate) < new Date() && !t.completed;
+                const isGlobal = t.isGlobal === true;
+                
                 return `
-                <div class="task-item ${t.completed ? 'completed' : ''}">
+                <div class="task-item ${t.completed ? 'completed' : ''} ${isGlobal ? 'global-task' : ''}">
                     <div class="task-header">
-                        <div class="task-title">${t.title}</div>
+                        <div class="task-title">
+                            ${isGlobal ? '<i class="fas fa-globe" style="color:var(--global)"></i> ' : ''}
+                            ${t.title}
+                        </div>
                         <div style="display:flex; gap:5px">
-                            <button class="btn btn-outline" style="padding:5px 8px" onclick="toggleTask(${t.id})">
+                            <button class="btn btn-outline" style="padding:5px 8px" onclick="toggleTask('${t.id}', ${isGlobal})">
                                 <i class="fas ${t.completed ? 'fa-undo' : 'fa-check'}"></i>
                             </button>
-                            <button class="btn btn-edit" style="padding:5px 8px" onclick="startEdit(${t.id})">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-danger" style="padding:5px 8px" onclick="deleteTask(${t.id})">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                            ${!isGlobal ? `
+                                <button class="btn btn-edit" style="padding:5px 8px" onclick="startEdit(${t.id})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger" style="padding:5px 8px" onclick="deleteTask(${t.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            ` : ''}
                         </div>
                     </div>
                     ${t.description ? `<div class="task-desc">${t.description}</div>` : ''}
@@ -202,6 +243,7 @@
                         <span class="${isUrgent ? 'urgent' : ''}">
                             <i class="fas fa-calendar-alt"></i> ${t.dueDate || 'Sin fecha'}
                         </span>
+                        ${isGlobal ? '<span style="color:var(--global); font-weight:bold">GLOBAL</span>' : ''}
                     </div>
                 </div>
             `}).join('');
@@ -209,7 +251,6 @@
 
     taskForm.onsubmit = (e) => {
         e.preventDefault();
-        
         let folderName = taskFolderSelect.value;
         if(folderName === "NUEVA") folderName = taskFolderNew.value;
 
@@ -230,10 +271,10 @@
                 folder: folderName,
                 dueDate: document.getElementById('taskDueDate').value,
                 description: document.getElementById('taskDesc').value,
-                completed: false
+                completed: false,
+                isGlobal: false
             });
         }
-        
         taskForm.reset();
         taskFolderNew.style.display = "none";
         saveData();
@@ -242,18 +283,13 @@
     function startEdit(id) {
         const t = tasks.find(task => task.id === id);
         if(!t) return;
-
         editMode = true;
         document.getElementById('editTaskId').value = t.id;
         document.getElementById('taskTitle').value = t.title;
         document.getElementById('taskDueDate').value = t.dueDate;
         document.getElementById('taskDesc').value = t.description;
-        
-        // Cargar carpeta en el select
         taskFolderSelect.value = t.folder;
         taskFolderNew.style.display = "none";
-        
-        // Estética del formulario
         document.getElementById('formTitle').innerHTML = '<i class="fas fa-edit"></i> Editando Tarea';
         document.getElementById('submitBtn').textContent = "Actualizar Tarea";
         document.getElementById('submitBtn').className = "btn btn-edit-mode";
@@ -271,12 +307,21 @@
         taskFolderNew.style.display = "none";
     }
 
-    const toggleTask = (id) => { tasks = tasks.map(t => t.id === id ? {...t, completed: !t.completed} : t); saveData(); };
+    // Modificado para aceptar tareas globales
+    const toggleTask = (id, isGlobal) => { 
+        if(isGlobal) {
+            globalTasks = globalTasks.map(t => t.id == id ? {...t, completed: !t.completed} : t);
+        } else {
+            tasks = tasks.map(t => t.id == id ? {...t, completed: !t.completed} : t);
+        }
+        saveData(); 
+    };
+
     const deleteTask = (id) => { if(confirm('¿Borrar tarea?')) { tasks = tasks.filter(t => t.id !== id); saveData(); } };
     const filterBy = (folder) => { currentFilter = folder; render(); };
 
     function exportData() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks));
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks.filter(t => !t.isGlobal)));
         const dl = document.createElement('a');
         dl.setAttribute("href", dataStr);
         dl.setAttribute("download", "backup_taskmaster.json");
@@ -290,7 +335,8 @@
         reader.readAsText(file);
     };
 
-    render();
+    // Iniciar carga de globales
+    fetchGlobalTasks();
 </script>
 </body>
 </html>
