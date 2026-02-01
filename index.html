@@ -14,7 +14,27 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: var(--bg); color: var(--text); padding: 20px; }
         .container { max-width: 1000px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 30px; }
+        header { text-align: center; margin-bottom: 20px; }
+
+        /* --- ESTILO DEL MENSAJE PERSONALIZABLE --- */
+        .custom-banner {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(37, 117, 252, 0.2);
+            font-size: 0.95rem;
+            animation: slideDown 0.5s ease;
+        }
+        .close-banner { cursor: pointer; opacity: 0.8; transition: 0.3s; padding: 5px; }
+        .close-banner:hover { opacity: 1; transform: scale(1.1); }
+        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        /* ----------------------------------------- */
+
         .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
         @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
         .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; position: sticky; top: 20px; }
@@ -45,13 +65,22 @@
 <body>
 
 <div class="container">
-    <header><h1>TaskMaster Pro</h1><p>Tu centro de organización personal</p></header>
+    <header>
+        <h1>TaskMaster Pro</h1>
+        <p>Tu centro de organización personal</p>
+    </header>
+
+    <div class="custom-banner" id="announcementBanner">
+        <span><i class="fas fa-bullhorn"></i> No apto para Joshuas (ahorita me denuncia por buling).</span>
+        <i class="fas fa-times close-banner" onclick="document.getElementById('announcementBanner').style.display='none'"></i>
+    </div>
+
     <div class="grid">
         <div class="sidebar">
             <div class="card">
                 <h2 id="formTitle"><i class="fas fa-plus-circle"></i> Nueva Tarea</h2>
                 <div id="editingMsg" class="editing-indicator">
-                    Estás editando una tarea. <button onclick="cancelEdit()" style="color:blue; cursor:pointer;">Cancelar</button>
+                    Estás editando una tarea. <button onclick="cancelEdit()" style="color:blue; cursor:pointer; background:none; border:none; text-decoration:underline;">Cancelar</button>
                 </div>
                 <form id="taskForm">
                     <input type="hidden" id="editTaskId">
@@ -113,25 +142,22 @@
         const all = [...tasks, ...globalTasks];
         const folders = [...new Set(all.map(t => t.folder || 'General'))];
         
-        // Render Filtros
         const filterContainer = document.getElementById('folderFilters');
         filterContainer.innerHTML = `<div class="folder-chip ${currentFilter === 'todas' ? 'active' : ''}" onclick="filterBy('todas')">Todas</div>`;
         folders.forEach(f => {
             filterContainer.innerHTML += `<div class="folder-chip ${currentFilter === f ? 'active' : ''}" onclick="filterBy('${f}')">${f}</div>`;
         });
 
-        // Update Select
         let options = `<option value="General">General</option>`;
         folders.filter(f => f !== "General").forEach(f => options += `<option value="${f}">${f}</option>`);
         options += `<option value="NUEVA">+ Nueva Carpeta...</option>`;
         document.getElementById('taskFolderSelect').innerHTML = options;
 
-        // Filtrado y ORDENACIÓN URGENTE
         let filtered = currentFilter === 'todas' ? all : all.filter(t => t.folder === currentFilter);
         filtered.sort((a, b) => {
-            if (a.completed !== b.completed) return a.completed - b.completed; // Pendientes arriba
+            if (a.completed !== b.completed) return a.completed - b.completed;
             if (!a.dueDate) return 1; if (!b.dueDate) return -1;
-            return new Date(a.dueDate) - new Date(b.dueDate); // Más antigua/cercana primero
+            return new Date(a.dueDate) - new Date(b.dueDate);
         });
 
         document.getElementById('taskList').innerHTML = filtered.map(t => `
@@ -183,6 +209,7 @@
         document.getElementById('taskFolderSelect').value = t.folder;
         document.getElementById('formTitle').innerText = "Editando...";
         document.getElementById('editingMsg').style.display = "block";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function cancelEdit() {
