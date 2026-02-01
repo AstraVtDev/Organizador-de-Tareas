@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TaskMaster Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
     <style>
         :root {
             --primary: #2575fc; --secondary: #6a11cb; --bg: #f4f7f6;
@@ -16,35 +17,27 @@
         .container { max-width: 1000px; margin: 0 auto; }
         header { text-align: center; margin-bottom: 20px; }
 
-        /* --- ESTILO DEL MENSAJE PERSONALIZABLE --- */
         .custom-banner {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 12px 20px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 15px rgba(37, 117, 252, 0.2);
-            font-size: 0.95rem;
+            color: white; padding: 12px 20px; border-radius: 12px; margin-bottom: 25px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 15px rgba(37, 117, 252, 0.2); font-size: 0.95rem;
             animation: slideDown 0.5s ease;
         }
         .close-banner { cursor: pointer; opacity: 0.8; transition: 0.3s; padding: 5px; }
         .close-banner:hover { opacity: 1; transform: scale(1.1); }
         @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        /* ----------------------------------------- */
 
         .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
         @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
-        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; position: sticky; top: 20px; }
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .sidebar .card { position: sticky; top: 20px; }
         h2 { font-size: 1.2rem; margin-bottom: 15px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
         .form-group { margin-bottom: 12px; }
         label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; }
         input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; background: #fff; }
         .btn { border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
         .btn-primary { background: var(--primary); color: white; width: 100%; justify-content: center; }
-        .btn-edit-mode { background: var(--edit); color: white; width: 100%; justify-content: center; }
         .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); font-size: 0.8rem; }
         .btn-danger { background: var(--danger); color: white; padding: 8px; }
         .btn-edit { background: var(--edit); color: white; padding: 8px; }
@@ -71,7 +64,7 @@
     </header>
 
     <div class="custom-banner" id="announcementBanner">
-        <span><i class="fas fa-bullhorn"></i> No apto para Joshuas (ahorita me denuncia por buling).</span>
+        <span><i class="fas fa-bullhorn"></i> No apto para Joshuas (ahorita me denuncia por bullying).</span>
         <i class="fas fa-times close-banner" onclick="document.getElementById('announcementBanner').style.display='none'"></i>
     </div>
 
@@ -94,6 +87,15 @@
                     <button type="submit" id="submitBtn" class="btn btn-primary">Añadir Tarea</button>
                 </form>
             </div>
+
+            <div class="card">
+                <h2><i class="fas fa-bell"></i> Notificaciones</h2>
+                <p style="font-size: 0.8rem; margin-bottom: 10px; color: #666;">Recibe avisos de tareas para hoy.</p>
+                <button class="btn btn-primary" onclick="activarNotificaciones()" style="background: #4b6cb7;">
+                    <i class="fas fa-check-circle"></i> Activar Avisos
+                </button>
+            </div>
+
             <div class="card">
                 <h2><i class="fas fa-copy"></i> Respaldo</h2>
                 <div style="display:flex; gap:10px;"><button class="btn btn-outline" onclick="exportData()">Exportar</button>
@@ -101,6 +103,7 @@
                 <input type="file" id="fileInput" accept=".json" style="display:none">
             </div>
         </div>
+
         <div class="main-list">
             <div class="card"><h2><i class="fas fa-filter"></i> Filtrar Carpetas</h2><div class="folder-list" id="folderFilters"></div></div>
             <div id="taskList"></div>
@@ -116,7 +119,7 @@
 
     async function fetchGlobalTasks() {
         try {
-            const response = await fetch('global_tasks.json');
+            const response = await fetch('global_tasks.json?v=' + Date.now());
             if (response.ok) {
                 const data = await response.json();
                 const globalStatus = JSON.parse(localStorage.getItem('tm_pro_global_status')) || {};
@@ -238,6 +241,39 @@
     };
 
     fetchGlobalTasks();
+
+    // REGISTRO DE PWA Y NOTIFICACIONES
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(err => console.log("SW no registrado", err));
+    }
+
+    function activarNotificaciones() {
+        if (!("Notification" in window)) {
+            alert("Este navegador no soporta notificaciones.");
+            return;
+        }
+        Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+                alert("¡Notificaciones activadas!");
+                chequearTareas();
+            }
+        });
+    }
+
+    function chequearTareas() {
+        const hoy = new Date().toISOString().split('T')[0];
+        const todas = [...tasks, ...globalTasks];
+        todas.forEach(t => {
+            if (t.dueDate === hoy && !t.completed) {
+                new Notification("Tarea para HOY", {
+                    body: `No olvides: ${t.title} (${t.folder})`,
+                    icon: 'logo.png'
+                });
+            }
+        });
+    }
+
+    setTimeout(chequearTareas, 3000);
 </script>
 </body>
 </html>
