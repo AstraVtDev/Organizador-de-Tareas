@@ -54,5 +54,13 @@
         "dueDate": "2026-02-06",
         "description": "Clase o lapbook que se yo xd",
         "isGlobal": true
+    },
+    {
+        "id": "g_08",
+        "title": "Puntos limitrofes de Norte,Sur,Este,Oeste",
+        "folder": "GHC Y FORMACIÓN",
+        "dueDate": "2026-02-03",
+        "description": "Llevar info del tema, que es lo de polemicas con colombia brazil y asi, y llevar lamina para hacer el esquema",
+        "isGlobal": true
     }
 ]
