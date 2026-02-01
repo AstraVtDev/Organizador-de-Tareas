@@ -1,9 +1,10 @@
-const CACHE_NAME = 'Tasky-v2';
+const CACHE_NAME = 'Tasky-v3'; // Subimos a v3 para forzar la actualización
 const assets = [
   './',
   './index.html',
   './global_tasks.json',
-  './manifest.json', // Añadido: Importante para que Android reconozca la PWA offline
+  './manifest.json',
+  './logo.png',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
 ];
 
@@ -11,14 +12,14 @@ const assets = [
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
-      console.log('Cacheando archivos principales...');
+      console.log('Tasky: Cacheando archivos...');
       return cache.addAll(assets);
     })
   );
-  self.skipWaiting(); // Fuerza a la nueva versión a activarse de inmediato
+  self.skipWaiting();
 });
 
-// Limpiar cachés antiguas (Para que los cambios se vean rápido)
+// Limpiar cachés antiguas
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys => {
@@ -27,6 +28,7 @@ self.addEventListener('activate', event => {
       );
     })
   );
+  return self.clients.claim();
 });
 
 // Responder sin internet
@@ -38,11 +40,26 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// --- ESTO ES LO QUE NECESITA ANDROID ---
 // Manejar el clic en la notificación
 self.addEventListener('notificationclick', event => {
-  event.notification.close(); // Cierra la notificación
+  event.notification.close();
   event.waitUntil(
-    clients.openWindow('./index.html') // Abre Tasky al tocar el aviso
+    clients.matchAll({ type: 'window' }).then(windowClients => {
+      // Si la app ya está abierta, ponle el foco
+      for (let client of windowClients) {
+        if (client.url === '/' && 'focus' in client) return client.focus();
+      }
+      // Si no, ábrela
+      if (clients.openWindow) return clients.openWindow('./');
+    })
   );
+});
+
+// --- FUNCIÓN PARA REVISIÓN EN SEGUNDO PLANO ---
+self.addEventListener('periodicsync', event => {
+  if (event.tag === 'revisar-tareas') {
+    // Nota: El Service Worker no puede leer el localStorage directamente,
+    // pero al despertar, el index.html se cargará y ejecutará chequearTareas()
+    console.log('Tasky: Ejecutando revisión en segundo plano...');
+  }
 });
