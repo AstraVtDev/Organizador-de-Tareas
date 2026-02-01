@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaskMaster Pro</title>
+    <title>Tasky</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
     <style>
@@ -59,7 +59,7 @@
 
 <div class="container">
     <header>
-        <h1>TaskMaster Pro</h1>
+        <h1>Tasky</h1>
         <p>Tu centro de organización personal</p>
     </header>
 
@@ -261,17 +261,43 @@
     }
 
     function chequearTareas() {
-        const hoy = new Date().toISOString().split('T')[0];
-        const todas = [...tasks, ...globalTasks];
-        todas.forEach(t => {
-            if (t.dueDate === hoy && !t.completed) {
-                new Notification("Tarea para HOY", {
-                    body: `No olvides: ${t.title} (${t.folder})`,
+    // Calculamos las fechas clave
+    const hoyObj = new Date();
+    const mañanaObj = new Date();
+    const pasadoObj = new Date();
+
+    mañanaObj.setDate(hoyObj.getDate() + 1);
+    pasadoObj.setDate(hoyObj.getDate() + 2);
+
+    const fechaHoy = hoyObj.toISOString().split('T')[0];
+    const fechaMañana = mañanaObj.toISOString().split('T')[0];
+    const fechaPasado = pasadoObj.toISOString().split('T')[0];
+
+    const todas = [...tasks, ...globalTasks];
+    
+    todas.forEach(t => {
+        if (!t.completed && t.dueDate) {
+            if (t.dueDate === fechaHoy) {
+                new Notification("🚨 ¡ES PARA HOY!", { 
+                    body: `No olvides: ${t.title}`,
+                    icon: 'logo.png' 
+                });
+            } 
+            else if (t.dueDate === fechaMañana) {
+                new Notification("⏳ Tarea para MAÑANA", { 
+                    body: `Prepárate: ${t.title}`,
                     icon: 'logo.png'
                 });
             }
-        });
-    }
+            else if (t.dueDate === fechaPasado) {
+                new Notification("📅 En 2 días vence:", { 
+                    body: `${t.title} (${t.folder})`,
+                    icon: 'logo.png'
+                });
+            }
+        }
+    });
+}
 
     setTimeout(chequearTareas, 3000);
 </script>
