@@ -1,6 +1,6 @@
 {
-  "name": "TaskMaster Pro",
-  "short_name": "TaskMaster",
+  "name": "Tasky",
+  "short_name": "Tasky",
   "description": "Organizador de tareas escolares",
   "start_url": "./index.html",
   "display": "standalone",
