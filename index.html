@@ -262,35 +262,32 @@
 
     function chequearTareas() {
     const hoyObj = new Date();
-    // Esto asegura que la fecha sea igual a la del calendario del móvil
-    const fechaHoy = hoyObj.toLocaleDateString('en-CA'); 
+    const f0 = hoyObj.toLocaleDateString('en-CA'); // Hoy
     
     const d1 = new Date(); d1.setDate(hoyObj.getDate() + 1);
-    const fechaMañana = d1.toLocaleDateString('en-CA');
+    const f1 = d1.toLocaleDateString('en-CA'); // Mañana
+
+    const d2 = new Date(); d2.setDate(hoyObj.getDate() + 2);
+    const f2 = d2.toLocaleDateString('en-CA'); // Pasado mañana (Lunes, si hoy es sábado)
 
     const todas = [...tasks, ...globalTasks];
     
     todas.forEach(t => {
         if (!t.completed && t.dueDate) {
-            let titulo = "";
-            if (t.dueDate === fechaHoy) titulo = "🚨 ¡ES PARA HOY!";
-            else if (t.dueDate === fechaMañana) titulo = "⏳ Tarea para MAÑANA";
+            let msg = "";
+            if (t.dueDate === f0) msg = "🚨 ¡ES PARA HOY!";
+            else if (t.dueDate === f1) msg = "⏳ Tarea para MAÑANA";
+            else if (t.dueDate === f2) msg = "📅 Tarea para el LUNES (o en 2 días)";
 
-            if (titulo) {
-                // Intentar usar el Service Worker (mejor para Android)
-                if (navigator.serviceWorker.controller) {
-                    navigator.serviceWorker.ready.then(reg => {
-                        reg.showNotification(titulo, {
-                            body: t.title,
-                            icon: 'logo.png',
-                            vibrate: [200, 100, 200],
-                            tag: t.id // Evita que se repitan si refrescas
-                        });
+            if (msg && navigator.serviceWorker.controller) {
+                navigator.serviceWorker.ready.then(reg => {
+                    reg.showNotification(msg, {
+                        body: t.title,
+                        icon: 'logo.png',
+                        vibrate: [200, 100, 200],
+                        tag: 'task-' + t.id 
                     });
-                } else {
-                    // Si no, usar la normal
-                    new Notification(titulo, { body: t.title, icon: 'logo.png' });
-                }
+                });
             }
         }
     });
