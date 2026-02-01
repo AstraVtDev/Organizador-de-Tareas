@@ -1,10 +1,58 @@
 [
     {
-        "id": "g1",
-        "title": "Mantenimiento del Servidor",
-        "folder": "Global",
-        "dueDate": "2026-12-31",
-        "description": "Tarea visible para todos los usuarios.",
-        "global": true
+        "id": "g_01",
+        "title": "La vaina esta de la pagina de autor",
+        "folder": "Castellano",
+        "dueDate": "2026-02-02",
+        "description": "Hay que llevar todo para armarlo allá, osea fotos papel bond, informacion, etc",
+        "isGlobal": true
+    },
+    {
+        "id": "g_02",
+        "title": "Matematicas",
+        "folder": "Matematicas",
+        "dueDate": "2026-02-03",
+        "description": "Los que faltaron por defender.",
+        "isGlobal": true
+    },
+    {
+        "id": "g_03",
+        "title": "Ciencias de la Tierra",
+        "folder": "Cs.T",
+        "dueDate": "2026-02-03",
+        "description": "El seminario.",
+        "isGlobal": true
+    },
+    {
+        "id": "g_04",
+        "title": "Biologia",
+        "folder": "Biologia",
+        "dueDate": "2026-02-04",
+        "description": "El examen.",
+        "isGlobal": true
+    },
+    {
+        "id": "g_05",
+        "title": "Participacion",
+        "folder": "Participacion",
+        "dueDate": "2026-02-05",
+        "description": "La tabla esa y el hilograma (llevar dibujo, claos, tabla y martillo)",
+        "isGlobal": true
+    },
+    {
+        "id": "g_06",
+        "title": "Dorina",
+        "folder": "GHC Y FORMACIÓN",
+        "dueDate": "2026-02-06",
+        "description": "La exposicion",
+        "isGlobal": true
+    },
+    {
+        "id": "g_07",
+        "title": "Ingles",
+        "folder": "Ingles",
+        "dueDate": "2026-02-06",
+        "description": "Clase o lapbook que se yo xd",
+        "isGlobal": true
     }
 ]
