@@ -261,17 +261,23 @@
     }
 
     function chequearTareas() {
-    // Calculamos las fechas clave
+    // Obtenemos la fecha local actual (sin horas, solo año-mes-día)
     const hoyObj = new Date();
+    const offset = hoyObj.getTimezoneOffset() * 60000; // Ajuste de zona horaria
+    
+    const getFechaLocal = (fecha) => {
+        return new Date(fecha - offset).toISOString().split('T')[0];
+    };
+
+    const fechaHoy = getFechaLocal(hoyObj);
+    
     const mañanaObj = new Date();
-    const pasadoObj = new Date();
-
     mañanaObj.setDate(hoyObj.getDate() + 1);
-    pasadoObj.setDate(hoyObj.getDate() + 2);
+    const fechaMañana = getFechaLocal(mañanaObj);
 
-    const fechaHoy = hoyObj.toISOString().split('T')[0];
-    const fechaMañana = mañanaObj.toISOString().split('T')[0];
-    const fechaPasado = pasadoObj.toISOString().split('T')[0];
+    const pasadoObj = new Date();
+    pasadoObj.setDate(hoyObj.getDate() + 2);
+    const fechaPasado = getFechaLocal(pasadoObj);
 
     const todas = [...tasks, ...globalTasks];
     
@@ -298,7 +304,6 @@
         }
     });
 }
-
     setTimeout(chequearTareas, 3000);
 </script>
 </body>
