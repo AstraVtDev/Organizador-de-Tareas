@@ -261,45 +261,36 @@
     }
 
     function chequearTareas() {
-    // Obtenemos la fecha local actual (sin horas, solo año-mes-día)
     const hoyObj = new Date();
-    const offset = hoyObj.getTimezoneOffset() * 60000; // Ajuste de zona horaria
+    // Esto asegura que la fecha sea igual a la del calendario del móvil
+    const fechaHoy = hoyObj.toLocaleDateString('en-CA'); 
     
-    const getFechaLocal = (fecha) => {
-        return new Date(fecha - offset).toISOString().split('T')[0];
-    };
-
-    const fechaHoy = getFechaLocal(hoyObj);
-    
-    const mañanaObj = new Date();
-    mañanaObj.setDate(hoyObj.getDate() + 1);
-    const fechaMañana = getFechaLocal(mañanaObj);
-
-    const pasadoObj = new Date();
-    pasadoObj.setDate(hoyObj.getDate() + 2);
-    const fechaPasado = getFechaLocal(pasadoObj);
+    const d1 = new Date(); d1.setDate(hoyObj.getDate() + 1);
+    const fechaMañana = d1.toLocaleDateString('en-CA');
 
     const todas = [...tasks, ...globalTasks];
     
     todas.forEach(t => {
         if (!t.completed && t.dueDate) {
-            if (t.dueDate === fechaHoy) {
-                new Notification("🚨 ¡ES PARA HOY!", { 
-                    body: `No olvides: ${t.title}`,
-                    icon: 'logo.png' 
-                });
-            } 
-            else if (t.dueDate === fechaMañana) {
-                new Notification("⏳ Tarea para MAÑANA", { 
-                    body: `Prepárate: ${t.title}`,
-                    icon: 'logo.png'
-                });
-            }
-            else if (t.dueDate === fechaPasado) {
-                new Notification("📅 En 2 días vence:", { 
-                    body: `${t.title} (${t.folder})`,
-                    icon: 'logo.png'
-                });
+            let titulo = "";
+            if (t.dueDate === fechaHoy) titulo = "🚨 ¡ES PARA HOY!";
+            else if (t.dueDate === fechaMañana) titulo = "⏳ Tarea para MAÑANA";
+
+            if (titulo) {
+                // Intentar usar el Service Worker (mejor para Android)
+                if (navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.ready.then(reg => {
+                        reg.showNotification(titulo, {
+                            body: t.title,
+                            icon: 'logo.png',
+                            vibrate: [200, 100, 200],
+                            tag: t.id // Evita que se repitan si refrescas
+                        });
+                    });
+                } else {
+                    // Si no, usar la normal
+                    new Notification(titulo, { body: t.title, icon: 'logo.png' });
+                }
             }
         }
     });
