@@ -1,13 +1,5 @@
 [
     {
-        "id": "g_01",
-        "title": "La vaina esta de la pagina de autor",
-        "folder": "Castellano",
-        "dueDate": "2026-02-02",
-        "description": "Hay que llevar todo para armarlo allá, osea fotos papel bond, informacion, etc",
-        "isGlobal": true
-    },
-    {
         "id": "g_02",
         "title": "Matematicas",
         "folder": "Matematicas",
@@ -61,6 +53,14 @@
         "folder": "Ingles",
         "dueDate": "2026-02-06",
         "description": "Clase o lapbook que se yo xd",
+        "isGlobal": true
+    },
+    {
+        "id": "g_09",
+        "title": "Comic",
+        "folder": "Orientacion",
+        "dueDate": "2026-02-09",
+        "description": "",
         "isGlobal": true
     }
 ]
