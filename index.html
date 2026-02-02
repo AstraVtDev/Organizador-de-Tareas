@@ -8,20 +8,31 @@
     <link rel="manifest" href="manifest.json">
     <style>
         :root {
-            --primary: #2575fc; --secondary: #6a11cb; --bg: #f4f7f6;
-            --text: #333; --danger: #ff4757; --success: #00d68f;
-            --edit: #ffa502; --global: #6366f1;
+            /* Paleta actualizada: Negro y Vinotinto con degradado a Morado */
+            --primary: #800020;        /* Vinotinto */
+            --secondary: #4b0082;      /* Morado (Indigo) para el difuminado */
+            --dark: #1a1a1a;           /* Negro suave para fondos y textos */
+            --bg: #121212;             /* Fondo oscuro principal */
+            --card-bg: #1e1e1e;        /* Fondo de tarjetas */
+            --text: #e0e0e0;           /* Texto claro para leer sobre negro */
+            --danger: #ff4757; 
+            --success: #00d68f;
+            --edit: #ffa502; 
+            --global: #6366f1;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: var(--bg); color: var(--text); padding: 20px; }
         .container { max-width: 1000px; margin: 0 auto; }
         header { text-align: center; margin-bottom: 20px; }
+        header h1 { color: white; }
+        header p { color: #888; }
 
         .custom-banner {
+            /* Degradado de Vinotinto a Morado */
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white; padding: 12px 20px; border-radius: 12px; margin-bottom: 25px;
             display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 15px rgba(37, 117, 252, 0.2); font-size: 0.95rem;
+            box-shadow: 0 4px 15px rgba(128, 0, 32, 0.4); font-size: 0.95rem;
             animation: slideDown 0.5s ease;
         }
         .close-banner { cursor: pointer; opacity: 0.8; transition: 0.3s; padding: 5px; }
@@ -30,29 +41,42 @@
 
         .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
         @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
-        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        
+        .card { background: var(--card-bg); padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); margin-bottom: 20px; border: 1px solid #333; }
         .sidebar .card { position: sticky; top: 20px; }
+        
         h2 { font-size: 1.2rem; margin-bottom: 15px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
         .form-group { margin-bottom: 12px; }
-        label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; background: #fff; }
+        label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #bbb; }
+        
+        input, select, textarea { 
+            width: 100%; padding: 10px; border: 1px solid #444; border-radius: 8px; 
+            font-size: 0.9rem; background: #2a2a2a; color: white; 
+        }
+        input:focus { outline: none; border-color: var(--primary); }
+
         .btn { border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-primary { background: var(--primary); color: white; width: 100%; justify-content: center; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; width: 100%; justify-content: center; }
         .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); font-size: 0.8rem; }
+        .btn-outline:hover { background: var(--primary); color: white; }
         .btn-danger { background: var(--danger); color: white; padding: 8px; }
         .btn-edit { background: var(--edit); color: white; padding: 8px; }
+
         .folder-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-        .folder-chip { padding: 6px 14px; background: #e2e8f0; border-radius: 20px; cursor: pointer; font-size: 0.8rem; font-weight: 500; }
+        .folder-chip { padding: 6px 14px; background: #333; border-radius: 20px; cursor: pointer; font-size: 0.8rem; font-weight: 500; color: #ccc; }
         .folder-chip.active { background: var(--primary); color: white; }
-        .task-item { background: #fff; border-radius: 12px; margin-bottom: 12px; padding: 15px; border: 1px solid #edf2f7; border-left: 5px solid var(--primary); transition: 0.2s; }
-        .task-item.completed { opacity: 0.6; border-left-color: var(--success); }
-        .task-item.global-task { border-left-color: var(--global); border-left-width: 8px; border-style: double; }
+
+        .task-item { background: #252525; border-radius: 12px; margin-bottom: 12px; padding: 15px; border: 1px solid #333; border-left: 5px solid var(--primary); transition: 0.2s; }
+        .task-item.completed { opacity: 0.4; border-left-color: var(--success); }
+        .task-item.global-task { border-left-color: var(--secondary); border-left-width: 8px; border-style: double; }
+        
         .task-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-        .task-title { font-weight: 700; font-size: 1.05rem; }
-        .task-desc { font-size: 0.9rem; color: #4a5568; background: #f8fafc; padding: 8px; border-radius: 6px; margin: 8px 0; border: 1px dashed #e2e8f0; }
-        .task-meta { font-size: 0.75rem; color: #718096; display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+        .task-title { font-weight: 700; font-size: 1.05rem; color: white; }
+        .task-desc { font-size: 0.9rem; color: #aaa; background: #1a1a1a; padding: 8px; border-radius: 6px; margin: 8px 0; border: 1px dashed #444; }
+        .task-meta { font-size: 0.75rem; color: #777; display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
         .urgent { color: var(--danger); font-weight: bold; }
-        .editing-indicator { display: none; background: #fff3cd; color: #856404; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 0.8rem; border: 1px solid #ffeeba; }
+        
+        .editing-indicator { display: none; background: #3a2a00; color: #ffcc00; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 0.8rem; border: 1px solid #554400; }
     </style>
 </head>
 <body>
@@ -73,7 +97,7 @@
             <div class="card">
                 <h2 id="formTitle"><i class="fas fa-plus-circle"></i> Nueva Tarea</h2>
                 <div id="editingMsg" class="editing-indicator">
-                    Estás editando una tarea. <button onclick="cancelEdit()" style="color:blue; cursor:pointer; background:none; border:none; text-decoration:underline;">Cancelar</button>
+                    Estás editando una tarea. <button onclick="cancelEdit()" style="color:#ffcc00; cursor:pointer; background:none; border:none; text-decoration:underline;">Cancelar</button>
                 </div>
                 <form id="taskForm">
                     <input type="hidden" id="editTaskId">
@@ -90,8 +114,8 @@
 
             <div class="card">
                 <h2><i class="fas fa-bell"></i> Notificaciones</h2>
-                <p style="font-size: 0.8rem; margin-bottom: 10px; color: #666;">Recibe avisos de tareas para hoy.</p>
-                <button class="btn btn-primary" onclick="activarNotificaciones()" style="background: #4b6cb7;">
+                <p style="font-size: 0.8rem; margin-bottom: 10px; color: #888;">Recibe avisos de tareas para hoy.</p>
+                <button class="btn btn-primary" onclick="activarNotificaciones()">
                     <i class="fas fa-check-circle"></i> Activar Avisos
                 </button>
             </div>
@@ -112,6 +136,7 @@
 </div>
 
 <script>
+    // El resto de la lógica JavaScript se mantiene igual que en tu versión original
     let tasks = JSON.parse(localStorage.getItem('tm_pro_data')) || [];
     let globalTasks = [];
     let currentFilter = 'todas';
@@ -181,7 +206,7 @@
                     </span>
                 </div>
             </div>
-        `).join('') || '<p style="text-align:center">No hay tareas.</p>';
+        `).join('') || '<p style="text-align:center; color:#555;">No hay tareas.</p>';
     }
 
     const taskForm = document.getElementById('taskForm');
@@ -242,7 +267,6 @@
 
     fetchGlobalTasks();
 
-    // REGISTRO DE PWA Y NOTIFICACIONES
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js').catch(err => console.log("SW no registrado", err));
     }
@@ -261,37 +285,34 @@
     }
 
     function chequearTareas() {
-    const hoyObj = new Date();
-    const f0 = hoyObj.toLocaleDateString('en-CA'); // Hoy
-    
-    const d1 = new Date(); d1.setDate(hoyObj.getDate() + 1);
-    const f1 = d1.toLocaleDateString('en-CA'); // Mañana
+        const hoyObj = new Date();
+        const f0 = hoyObj.toLocaleDateString('en-CA'); 
+        const d1 = new Date(); d1.setDate(hoyObj.getDate() + 1);
+        const f1 = d1.toLocaleDateString('en-CA');
+        const d2 = new Date(); d2.setDate(hoyObj.getDate() + 2);
+        const f2 = d2.toLocaleDateString('en-CA');
 
-    const d2 = new Date(); d2.setDate(hoyObj.getDate() + 2);
-    const f2 = d2.toLocaleDateString('en-CA'); // Pasado mañana (Lunes, si hoy es sábado)
+        const todas = [...tasks, ...globalTasks];
+        todas.forEach(t => {
+            if (!t.completed && t.dueDate) {
+                let msg = "";
+                if (t.dueDate === f0) msg = "🚨 ¡ES PARA HOY!";
+                else if (t.dueDate === f1) msg = "⏳ Tarea para MAÑANA";
+                else if (t.dueDate === f2) msg = "📅 Tarea en 2 Dias";
 
-    const todas = [...tasks, ...globalTasks];
-    
-    todas.forEach(t => {
-        if (!t.completed && t.dueDate) {
-            let msg = "";
-            if (t.dueDate === f0) msg = "🚨 ¡ES PARA HOY!";
-            else if (t.dueDate === f1) msg = "⏳ Tarea para MAÑANA";
-            else if (t.dueDate === f2) msg = "📅 Tarea en 2 Dias";
-
-            if (msg && navigator.serviceWorker.controller) {
-                navigator.serviceWorker.ready.then(reg => {
-                    reg.showNotification(msg, {
-                        body: t.title,
-                        icon: 'logo.png',
-                        vibrate: [200, 100, 200],
-                        tag: 'task-' + t.id 
+                if (msg && navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.ready.then(reg => {
+                        reg.showNotification(msg, {
+                            body: t.title,
+                            icon: 'logo.png',
+                            vibrate: [200, 100, 200],
+                            tag: 'task-' + t.id 
+                        });
                     });
-                });
+                }
             }
-        }
-    });
-}
+        });
+    }
     setTimeout(chequearTareas, 3000);
 </script>
 </body>
