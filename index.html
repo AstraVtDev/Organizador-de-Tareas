@@ -64,7 +64,7 @@
     </header>
 
     <div class="custom-banner" id="announcementBanner">
-        <span><i class="fas fa-bullhorn"></i> No apto para Joshuas (ahorita me denuncia por bullying).</span>
+        <span><i class="fas fa-bullhorn"></i> Comprenle cortes a Dariam Barber.</span>
         <i class="fas fa-times close-banner" onclick="document.getElementById('announcementBanner').style.display='none'"></i>
     </div>
 
@@ -277,7 +277,7 @@
             let msg = "";
             if (t.dueDate === f0) msg = "🚨 ¡ES PARA HOY!";
             else if (t.dueDate === f1) msg = "⏳ Tarea para MAÑANA";
-            else if (t.dueDate === f2) msg = "📅 Tarea para el LUNES (o en 2 días)";
+            else if (t.dueDate === f2) msg = "📅 Tarea en 2 Dias";
 
             if (msg && navigator.serviceWorker.controller) {
                 navigator.serviceWorker.ready.then(reg => {
