@@ -1,4 +1,4 @@
-const CACHE_NAME = 'Tasky-v4'; // Subimos a v3 para forzar la actualización
+const CACHE_NAME = 'Turpialy-V1'; // Subimos a v3 para forzar la actualización
 const assets = [
   './',
   './index.html',
@@ -60,6 +60,6 @@ self.addEventListener('periodicsync', event => {
   if (event.tag === 'revisar-tareas') {
     // Nota: El Service Worker no puede leer el localStorage directamente,
     // pero al despertar, el index.html se cargará y ejecutará chequearTareas()
-    console.log('Tasky: Ejecutando revisión en segundo plano...');
+    console.log('Turpialy: Ejecutando revisión en segundo plano...');
   }
 });
