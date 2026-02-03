@@ -62,5 +62,13 @@
         "dueDate": "2026-02-09",
         "description": "",
         "isGlobal": true
+    },
+    {
+        "id": "g_10",
+        "title": "Educacion Fisica",
+        "folder": "Edc Fisica",
+        "dueDate": "2026-02-05",
+        "description": "Mapa mixto sobre lo que dice en el plan de evaluacion, equipos de 3",
+        "isGlobal": true
     }
 ]
