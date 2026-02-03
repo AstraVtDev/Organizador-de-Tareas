@@ -19,7 +19,7 @@
         "id": "g_08",
         "title": "Puntos limitrofes de Norte,Sur,Este,Oeste",
         "folder": "GHC Y FORMACIÓN",
-        "dueDate": "2026-02-03",
+        "dueDate": "2026-02-06",
         "description": "Llevar info del tema, que es lo de polemicas con colombia brazil y asi, y llevar lamina para hacer el esquema",
         "isGlobal": true
     },
@@ -44,7 +44,7 @@
         "title": "Dorina",
         "folder": "GHC Y FORMACIÓN",
         "dueDate": "2026-02-06",
-        "description": "La exposicion",
+        "description": "Exposicion con los temas de zodi, redi, adi, zodi, y los problemas limitrofes",
         "isGlobal": true
     },
     {
@@ -69,6 +69,14 @@
         "folder": "Edc Fisica",
         "dueDate": "2026-02-05",
         "description": "Mapa mixto sobre lo que dice en el plan de evaluacion, equipos de 3",
+        "isGlobal": true
+    },
+    {
+        "id": "g_11",
+        "title": "Dorina",
+        "folder": "GHC Y FORMACIÓN",
+        "dueDate": "2026-02-20",
+        "description": "Exposicion Mercosur,PetroCaribe,CEIA,ALADI",
         "isGlobal": true
     }
 ]
