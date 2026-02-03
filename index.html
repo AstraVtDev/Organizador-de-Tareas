@@ -11,8 +11,8 @@
             /* Paleta actualizada: Negro y Vinotinto con degradado a Morado */
             --primary: #800020;        /* Vinotinto */
             --secondary: #4b0082;      /* Morado (Indigo) para el difuminado */
-            --dark: #1a1a1a;           /* Negro suave para fondos y textos */
-            --bg: #121212;             /* Fondo oscuro principal */
+            --dark: #1a1a1a;            /* Negro suave para fondos y textos */
+            --bg: #121212;              /* Fondo oscuro principal */
             --card-bg: #1e1e1e;        /* Fondo de tarjetas */
             --text: #e0e0e0;           /* Texto claro para leer sobre negro */
             --danger: #ff4757; 
@@ -129,18 +129,26 @@
         </div>
 
         <div class="main-list">
-            <div class="card"><h2><i class="fas fa-filter"></i> Filtrar Carpetas</h2><div class="folder-list" id="folderFilters"></div></div>
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h2 style="margin-bottom: 0;"><i class="fas fa-filter"></i> Filtrar Carpetas</h2>
+                    <button id="toggleGlobalBtn" class="btn btn-outline" onclick="toggleGlobalVisibility()">
+                        <i class="fas fa-eye-slash"></i> Ocultar Globales
+                    </button>
+                </div>
+                <div class="folder-list" id="folderFilters"></div>
+            </div>
             <div id="taskList"></div>
         </div>
     </div>
 </div>
 
 <script>
-    // El resto de la lógica JavaScript se mantiene igual que en tu versión original
     let tasks = JSON.parse(localStorage.getItem('tm_pro_data')) || [];
     let globalTasks = [];
     let currentFilter = 'todas';
     let editMode = false;
+    let showGlobal = true; // Nueva variable para controlar visibilidad
 
     async function fetchGlobalTasks() {
         try {
@@ -151,6 +159,17 @@
                 globalTasks = data.map(t => ({ ...t, completed: globalStatus[t.id] || false, isGlobal: true }));
             }
         } catch (e) { console.log("Sin archivo global."); }
+        render();
+    }
+
+    function toggleGlobalVisibility() {
+        showGlobal = !showGlobal;
+        const btn = document.getElementById('toggleGlobalBtn');
+        if(showGlobal) {
+            btn.innerHTML = '<i class="fas fa-eye-slash"></i> Ocultar Globales';
+        } else {
+            btn.innerHTML = '<i class="fas fa-eye"></i> Mostrar Globales';
+        }
         render();
     }
 
@@ -167,8 +186,12 @@
     }
 
     function render() {
-        const all = [...tasks, ...globalTasks];
-        const folders = [...new Set(all.map(t => t.folder || 'General'))];
+        // Combinamos basándonos en si deben mostrarse o no
+        const visibleTasks = showGlobal ? [...tasks, ...globalTasks] : [...tasks];
+        
+        // Las carpetas se calculan siempre de todas para no perder navegación
+        const allForFolders = [...tasks, ...globalTasks];
+        const folders = [...new Set(allForFolders.map(t => t.folder || 'General'))];
         
         const filterContainer = document.getElementById('folderFilters');
         filterContainer.innerHTML = `<div class="folder-chip ${currentFilter === 'todas' ? 'active' : ''}" onclick="filterBy('todas')">Todas</div>`;
@@ -181,7 +204,8 @@
         options += `<option value="NUEVA">+ Nueva Carpeta...</option>`;
         document.getElementById('taskFolderSelect').innerHTML = options;
 
-        let filtered = currentFilter === 'todas' ? all : all.filter(t => t.folder === currentFilter);
+        let filtered = currentFilter === 'todas' ? visibleTasks : visibleTasks.filter(t => t.folder === currentFilter);
+        
         filtered.sort((a, b) => {
             if (a.completed !== b.completed) return a.completed - b.completed;
             if (!a.dueDate) return 1; if (!b.dueDate) return -1;
