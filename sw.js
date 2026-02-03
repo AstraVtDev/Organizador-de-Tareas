@@ -1,4 +1,4 @@
-const CACHE_NAME = 'Turpialy-V2'; // Subimos a v3 para forzar la actualización
+const CACHE_NAME = 'Turpialy-V3'; // Subimos a v3 para forzar la actualización
 const assets = [
   './',
   './index.html',
