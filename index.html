@@ -8,13 +8,12 @@
     <link rel="manifest" href="manifest.json">
     <style>
         :root {
-            /* Paleta actualizada: Negro y Vinotinto con degradado a Morado */
-            --primary: #800020;        /* Vinotinto */
-            --secondary: #4b0082;      /* Morado (Indigo) para el difuminado */
-            --dark: #1a1a1a;            /* Negro suave para fondos y textos */
-            --bg: #121212;              /* Fondo oscuro principal */
-            --card-bg: #1e1e1e;        /* Fondo de tarjetas */
-            --text: #e0e0e0;           /* Texto claro para leer sobre negro */
+            --primary: #800020;
+            --secondary: #4b0082;
+            --dark: #1a1a1a;
+            --bg: #121212;
+            --card-bg: #1e1e1e;
+            --text: #e0e0e0;
             --danger: #ff4757; 
             --success: #00d68f;
             --edit: #ffa502; 
@@ -28,7 +27,6 @@
         header p { color: #888; }
 
         .custom-banner {
-            /* Degradado de Vinotinto a Morado */
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white; padding: 12px 20px; border-radius: 12px; margin-bottom: 25px;
             display: flex; justify-content: space-between; align-items: center;
@@ -77,6 +75,9 @@
         .urgent { color: var(--danger); font-weight: bold; }
         
         .editing-indicator { display: none; background: #3a2a00; color: #ffcc00; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 0.8rem; border: 1px solid #554400; }
+        
+        /* Estilo para el encabezado de filtros */
+        .filter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
     </style>
 </head>
 <body>
@@ -114,7 +115,6 @@
 
             <div class="card">
                 <h2><i class="fas fa-bell"></i> Notificaciones</h2>
-                <p style="font-size: 0.8rem; margin-bottom: 10px; color: #888;">Recibe avisos de tareas para hoy.</p>
                 <button class="btn btn-primary" onclick="activarNotificaciones()">
                     <i class="fas fa-check-circle"></i> Activar Avisos
                 </button>
@@ -130,8 +130,8 @@
 
         <div class="main-list">
             <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h2 style="margin-bottom: 0;"><i class="fas fa-filter"></i> Filtrar Carpetas</h2>
+                <div class="filter-header">
+                    <h2 style="margin-bottom:0"><i class="fas fa-filter"></i> Filtrar Carpetas</h2>
                     <button id="toggleGlobalBtn" class="btn btn-outline" onclick="toggleGlobalVisibility()">
                         <i class="fas fa-eye-slash"></i> Ocultar Globales
                     </button>
@@ -148,7 +148,7 @@
     let globalTasks = [];
     let currentFilter = 'todas';
     let editMode = false;
-    let showGlobal = true; // Nueva variable para controlar visibilidad
+    let showGlobal = true; 
 
     async function fetchGlobalTasks() {
         try {
@@ -165,11 +165,7 @@
     function toggleGlobalVisibility() {
         showGlobal = !showGlobal;
         const btn = document.getElementById('toggleGlobalBtn');
-        if(showGlobal) {
-            btn.innerHTML = '<i class="fas fa-eye-slash"></i> Ocultar Globales';
-        } else {
-            btn.innerHTML = '<i class="fas fa-eye"></i> Mostrar Globales';
-        }
+        btn.innerHTML = showGlobal ? '<i class="fas fa-eye-slash"></i> Ocultar Globales' : '<i class="fas fa-eye"></i> Mostrar Globales';
         render();
     }
 
@@ -186,10 +182,7 @@
     }
 
     function render() {
-        // Combinamos basándonos en si deben mostrarse o no
         const visibleTasks = showGlobal ? [...tasks, ...globalTasks] : [...tasks];
-        
-        // Las carpetas se calculan siempre de todas para no perder navegación
         const allForFolders = [...tasks, ...globalTasks];
         const folders = [...new Set(allForFolders.map(t => t.folder || 'General'))];
         
@@ -205,7 +198,6 @@
         document.getElementById('taskFolderSelect').innerHTML = options;
 
         let filtered = currentFilter === 'todas' ? visibleTasks : visibleTasks.filter(t => t.folder === currentFilter);
-        
         filtered.sort((a, b) => {
             if (a.completed !== b.completed) return a.completed - b.completed;
             if (!a.dueDate) return 1; if (!b.dueDate) return -1;
@@ -238,7 +230,6 @@
         e.preventDefault();
         let folder = document.getElementById('taskFolderSelect').value;
         if(folder === "NUEVA") folder = document.getElementById('taskFolderNew').value;
-
         if (editMode) {
             const id = parseInt(document.getElementById('editTaskId').value);
             tasks = tasks.map(t => t.id === id ? { ...t, title: document.getElementById('taskTitle').value, folder, dueDate: document.getElementById('taskDueDate').value, description: document.getElementById('taskDesc').value } : t);
@@ -278,6 +269,7 @@
 
     const deleteTask = (id) => { if(confirm('¿Borrar?')) { tasks = tasks.filter(t => t.id !== id); saveData(); } };
     const filterBy = (f) => { currentFilter = f; render(); };
+    
     function exportData() {
         const blob = new Blob([JSON.stringify(tasks)], {type: 'application/json'});
         const url = URL.createObjectURL(blob);
@@ -289,55 +281,25 @@
         reader.readAsText(e.target.files[0]);
     };
 
-    fetchGlobalTasks();
-
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js').catch(err => console.log("SW no registrado", err));
-    }
-
     function activarNotificaciones() {
-        if (!("Notification" in window)) {
-            alert("Este navegador no soporta notificaciones.");
-            return;
-        }
+        if (!("Notification" in window)) return;
         Notification.requestPermission().then(permission => {
-            if (permission === "granted") {
-                alert("¡Notificaciones activadas!");
-                chequearTareas();
-            }
+            if (permission === "granted") { alert("¡Activadas!"); chequearTareas(); }
         });
     }
 
     function chequearTareas() {
-        const hoyObj = new Date();
-        const f0 = hoyObj.toLocaleDateString('en-CA'); 
-        const d1 = new Date(); d1.setDate(hoyObj.getDate() + 1);
-        const f1 = d1.toLocaleDateString('en-CA');
-        const d2 = new Date(); d2.setDate(hoyObj.getDate() + 2);
-        const f2 = d2.toLocaleDateString('en-CA');
-
-        const todas = [...tasks, ...globalTasks];
-        todas.forEach(t => {
-            if (!t.completed && t.dueDate) {
-                let msg = "";
-                if (t.dueDate === f0) msg = "🚨 ¡ES PARA HOY!";
-                else if (t.dueDate === f1) msg = "⏳ Tarea para MAÑANA";
-                else if (t.dueDate === f2) msg = "📅 Tarea en 2 Dias";
-
-                if (msg && navigator.serviceWorker.controller) {
-                    navigator.serviceWorker.ready.then(reg => {
-                        reg.showNotification(msg, {
-                            body: t.title,
-                            icon: 'logo.png',
-                            vibrate: [200, 100, 200],
-                            tag: 'task-' + t.id 
-                        });
-                    });
-                }
+        const hoy = new Date().toLocaleDateString('en-CA');
+        [...tasks, ...globalTasks].forEach(t => {
+            if (!t.completed && t.dueDate === hoy && navigator.serviceWorker.controller) {
+                navigator.serviceWorker.ready.then(reg => {
+                    reg.showNotification("🚨 Tarea para hoy", { body: t.title, icon: 'logo.png' });
+                });
             }
         });
     }
-    setTimeout(chequearTareas, 3000);
+
+    fetchGlobalTasks();
 </script>
 </body>
 </html>
