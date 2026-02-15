@@ -1,41 +1,17 @@
 [
     {
-        "id": "g_02",
-        "title": "Matematicas",
-        "folder": "Matematicas",
-        "dueDate": "2026-02-03",
-        "description": "Los que faltaron por defender.",
-        "isGlobal": true
-    },
-    {
-        "id": "g_03",
-        "title": "Ciencias de la Tierra",
-        "folder": "Cs.T",
-        "dueDate": "2026-02-03",
-        "description": "El seminario.",
-        "isGlobal": true
-    },
-    {
         "id": "g_08",
         "title": "Puntos limitrofes de Norte,Sur,Este,Oeste",
         "folder": "GHC Y FORMACIÓN",
-        "dueDate": "2026-02-06",
+        "dueDate": "2026-02-20",
         "description": "Llevar info del tema, que es lo de polemicas con colombia brazil y asi, y llevar lamina para hacer el esquema",
-        "isGlobal": true
-    },
-    {
-        "id": "g_04",
-        "title": "Biologia",
-        "folder": "Biologia",
-        "dueDate": "2026-02-04",
-        "description": "El examen.",
         "isGlobal": true
     },
     {
         "id": "g_05",
         "title": "Participacion",
         "folder": "Participacion",
-        "dueDate": "2026-02-05",
+        "dueDate": "2026-02-19",
         "description": "La tabla esa y el hilograma (llevar dibujo, claos, tabla y martillo)",
         "isGlobal": true
     },
@@ -43,7 +19,7 @@
         "id": "g_06",
         "title": "Dorina",
         "folder": "GHC Y FORMACIÓN",
-        "dueDate": "2026-02-06",
+        "dueDate": "2026-02-20",
         "description": "Exposicion con los temas de zodi, redi, adi, zodi, y los problemas limitrofes",
         "isGlobal": true
     },
@@ -51,24 +27,24 @@
         "id": "g_07",
         "title": "Ingles",
         "folder": "Ingles",
-        "dueDate": "2026-02-06",
-        "description": "Clase o lapbook que se yo xd",
+        "dueDate": "2026-02-20",
+        "description": "Prueba de inglish",
         "isGlobal": true
     },
     {
         "id": "g_09",
         "title": "Comic",
         "folder": "Orientacion",
-        "dueDate": "2026-02-09",
-        "description": "",
+        "dueDate": "2026-02-18",
+        "description": "hacer o llevar el comic ya hecho",
         "isGlobal": true
     },
     {
         "id": "g_10",
         "title": "Educacion Fisica",
         "folder": "Edc Fisica",
-        "dueDate": "2026-02-05",
-        "description": "Mapa mixto sobre lo que dice en el plan de evaluacion, equipos de 3",
+        "dueDate": "2026-02-19",
+        "description": "Mapa mixto sobre lo que dice en el plan de evaluacion, equipos de 3 con defensa",
         "isGlobal": true
     },
     {
@@ -77,6 +53,30 @@
         "folder": "GHC Y FORMACIÓN",
         "dueDate": "2026-02-20",
         "description": "Exposicion Mercosur,PetroCaribe,CEIA,ALADI",
+        "isGlobal": true
+    },
+    {
+        "id": "g_12",
+        "title": "Examen de Química",
+        "folder": "Quimica",
+        "dueDate": "2026-02-20",
+        "description": "Se supone que examen",
+        "isGlobal": true
+    },
+    {
+        "id": "g_13",
+        "title": "Matrices",
+        "folder": "Matemáticas",
+        "dueDate": "2026-02-19",
+        "description": "Examen de matrices",
+        "isGlobal": true
+    },
+    {
+        "id": "g_14",
+        "title": "Mapa mixto Biologia",
+        "folder": "Biología",
+        "dueDate": "2026-02-19",
+        "description": "El mapa mixto que mando a hacer con defensa",
         "isGlobal": true
     }
 ]
