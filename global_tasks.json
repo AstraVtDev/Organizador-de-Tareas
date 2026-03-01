@@ -1,82 +1,66 @@
 [
     {
-        "id": "g_08",
-        "title": "Puntos limitrofes de Norte,Sur,Este,Oeste",
-        "folder": "GHC Y FORMACIÓN",
-        "dueDate": "2026-02-20",
-        "description": "Llevar info del tema, que es lo de polemicas con colombia brazil y asi, y llevar lamina para hacer el esquema",
-        "isGlobal": true
-    },
-    {
-        "id": "g_05",
+        "id": "g_15",
         "title": "Participacion",
         "folder": "Participacion",
-        "dueDate": "2026-02-19",
+        "dueDate": "2026-03-05",
         "description": "La tabla esa y el hilograma (llevar dibujo, claos, tabla y martillo)",
         "isGlobal": true
     },
     {
-        "id": "g_06",
+        "id": "g_16",
         "title": "Dorina",
         "folder": "GHC Y FORMACIÓN",
-        "dueDate": "2026-02-20",
-        "description": "Exposicion con los temas de zodi, redi, adi, zodi, y los problemas limitrofes",
+        "dueDate": "2026-03-03",
+        "description": "Exposicion de lo que dio la ultima clase",
         "isGlobal": true
     },
     {
-        "id": "g_07",
+        "id": "g_17",
         "title": "Ingles",
         "folder": "Ingles",
-        "dueDate": "2026-02-20",
-        "description": "Prueba de inglish",
+        "dueDate": "2026-03-06",
+        "description": "Examen de inglish",
         "isGlobal": true
     },
     {
-        "id": "g_09",
-        "title": "Comic",
+        "id": "g_18",
+        "title": "Triptico",
         "folder": "Orientacion",
-        "dueDate": "2026-02-18",
-        "description": "hacer o llevar el comic ya hecho",
+        "dueDate": "2026-03-02",
+        "description": "hacer o llevar el triptico ya hecho no se",
         "isGlobal": true
     },
     {
-        "id": "g_10",
+        "id": "g_19",
         "title": "Educacion Fisica",
         "folder": "Edc Fisica",
-        "dueDate": "2026-02-19",
-        "description": "Mapa mixto sobre lo que dice en el plan de evaluacion, equipos de 3 con defensa",
+        "dueDate": "2026-03-05",
+        "description": "defender el mapa mixto",
         "isGlobal": true
     },
     {
-        "id": "g_11",
-        "title": "Dorina",
-        "folder": "GHC Y FORMACIÓN",
-        "dueDate": "2026-02-20",
-        "description": "Exposicion Mercosur,PetroCaribe,CEIA,ALADI",
-        "isGlobal": true
-    },
-    {
-        "id": "g_12",
+        "id": "g_20",
         "title": "Examen de Química",
         "folder": "Quimica",
-        "dueDate": "2026-02-20",
+        "dueDate": "2026-03-06",
         "description": "Se supone que examen",
         "isGlobal": true
     },
     {
-        "id": "g_13",
-        "title": "Matrices",
-        "folder": "Matemáticas",
+        "id": "g_21",
+        "title": "Mapa mental",
+        "folder": "Castellano",
         "dueDate": "2026-02-19",
-        "description": "Examen de matrices",
+        "description": "El mapa mental ocn las preguntas que dio y asi",
         "isGlobal": true
     },
     {
-        "id": "g_14",
-        "title": "Mapa mixto Biologia",
-        "folder": "Biología",
-        "dueDate": "2026-02-19",
-        "description": "El mapa mixto que mando a hacer con defensa",
+        "id": "g_22",
+        "title": "Preguntas",
+        "folder": "Biologia",
+        "dueDate": "2026-03-04",
+        "description": "Preguntas de biologia",
         "isGlobal": true
     }
 ]
