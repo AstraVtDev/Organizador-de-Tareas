@@ -3,311 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Turpialy</title>
+    <title>Turpialy - ¡Misión Cumplida!</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="manifest" href="manifest.json">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
             --primary: #800020;
             --secondary: #4b0082;
-            --dark: #1a1a1a;
             --bg: #121212;
             --card-bg: #1e1e1e;
             --text: #e0e0e0;
-            --danger: #ff4757; 
             --success: #00d68f;
-            --edit: #ffa502; 
-            --global: #6366f1;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background: var(--bg); color: var(--text); padding: 20px; }
-        .container { max-width: 1000px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 20px; }
-        header h1 { color: white; }
-        header p { color: #888; }
-
-        .custom-banner {
+        body { 
+            background: var(--bg); 
+            color: var(--text); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            padding: 20px;
+            overflow: hidden;
+        }
+        .celebration-card {
+            background: var(--card-bg);
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(128, 0, 32, 0.4);
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .icon-box {
+            font-size: 4rem;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white; padding: 12px 20px; border-radius: 12px; margin-bottom: 25px;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 15px rgba(128, 0, 32, 0.4); font-size: 0.95rem;
-            animation: slideDown 0.5s ease;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
         }
-        .close-banner { cursor: pointer; opacity: 0.8; transition: 0.3s; padding: 5px; }
-        .close-banner:hover { opacity: 1; transform: scale(1.1); }
-        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
-        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
-        
-        .card { background: var(--card-bg); padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); margin-bottom: 20px; border: 1px solid #333; position: relative; }
-        .sidebar .card { position: sticky; top: 20px; }
-        
-        h2 { font-size: 1.2rem; margin-bottom: 15px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
-        .form-group { margin-bottom: 12px; }
-        label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #bbb; }
-        
-        input, select, textarea { 
-            width: 100%; padding: 10px; border: 1px solid #444; border-radius: 8px; 
-            font-size: 0.9rem; background: #2a2a2a; color: white; 
-        }
-        input:focus { outline: none; border-color: var(--primary); }
-
-        .btn { border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; width: 100%; justify-content: center; }
-        .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); font-size: 0.8rem; }
-        .btn-outline:hover { background: var(--primary); color: white; }
-        .btn-danger { background: var(--danger); color: white; padding: 8px; }
-        .btn-edit { background: var(--edit); color: white; padding: 8px; }
-
-        /* Estilo específico para el botón de ocultar globales */
-        #toggleGlobalBtn {
-            background: var(--primary);
+        h1 { font-size: 2.2rem; color: #fff; margin-bottom: 10px; }
+        h2 { font-size: 1.4rem; color: var(--success); margin-bottom: 20px; font-weight: 600; }
+        p { color: #aaa; font-size: 1rem; line-height: 1.6; margin-bottom: 25px; }
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            border: none;
-            padding: 6px 12px;
-            font-size: 0.75rem;
-            border-radius: 6px;
-            cursor: pointer;
-            float: right;
-            margin-top: -5px;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
-
-        .folder-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; clear: both; }
-        .folder-chip { padding: 6px 14px; background: #333; border-radius: 20px; cursor: pointer; font-size: 0.8rem; font-weight: 500; color: #ccc; }
-        .folder-chip.active { background: var(--primary); color: white; }
-
-        .task-item { background: #252525; border-radius: 12px; margin-bottom: 12px; padding: 15px; border: 1px solid #333; border-left: 5px solid var(--primary); transition: 0.2s; }
-        .task-item.completed { opacity: 0.4; border-left-color: var(--success); }
-        .task-item.global-task { border-left-color: var(--secondary); border-left-width: 8px; border-style: double; }
-        
-        .task-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-        .task-title { font-weight: 700; font-size: 1.05rem; color: white; }
-        .task-desc { font-size: 0.9rem; color: #aaa; background: #1a1a1a; padding: 8px; border-radius: 6px; margin: 8px 0; border: 1px dashed #444; }
-        .task-meta { font-size: 0.75rem; color: #777; display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
-        .urgent { color: var(--danger); font-weight: bold; }
-        
-        .editing-indicator { display: none; background: #3a2a00; color: #ffcc00; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 0.8rem; border: 1px solid #554400; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1>Turpialy</h1>
-        <p>Tu centro de organización personal</p>
-    </header>
-
-    <div class="custom-banner" id="announcementBanner">
-        <span><i class="fas fa-bullhorn"></i> Tu ere waza waza, waza waza</span>
-        <i class="fas fa-times close-banner" onclick="document.getElementById('announcementBanner').style.display='none'"></i>
+<div class="celebration-card">
+    <div class="icon-box">
+        <i class="fas fa-graduation-cap"></i>
     </div>
-
-    <div class="grid">
-        <div class="sidebar">
-            <div class="card">
-                <h2 id="formTitle"><i class="fas fa-plus-circle"></i> Nueva Tarea</h2>
-                <div id="editingMsg" class="editing-indicator">
-                    Estás editando una tarea. <button onclick="cancelEdit()" style="color:#ffcc00; cursor:pointer; background:none; border:none; text-decoration:underline;">Cancelar</button>
-                </div>
-                <form id="taskForm">
-                    <input type="hidden" id="editTaskId">
-                    <div class="form-group"><label>Título</label><input type="text" id="taskTitle" required></div>
-                    <div class="form-group"><label>Carpeta / Grupo</label>
-                        <select id="taskFolderSelect" onchange="checkNewFolder(this)"></select>
-                        <input type="text" id="taskFolderNew" style="margin-top:8px; display:none" placeholder="Nueva carpeta">
-                    </div>
-                    <div class="form-group"><label>Fecha Límite</label><input type="date" id="taskDueDate"></div>
-                    <div class="form-group"><label>Descripción</label><textarea id="taskDesc"></textarea></div>
-                    <button type="submit" id="submitBtn" class="btn btn-primary">Añadir Tarea</button>
-                </form>
-            </div>
-
-            <div class="card">
-                <h2><i class="fas fa-bell"></i> Notificaciones</h2>
-                <button class="btn btn-primary" onclick="activarNotificaciones()">
-                    <i class="fas fa-check-circle"></i> Activar Avisos
-                </button>
-            </div>
-
-            <div class="card">
-                <h2><i class="fas fa-copy"></i> Respaldo</h2>
-                <div style="display:flex; gap:10px;"><button class="btn btn-outline" onclick="exportData()">Exportar</button>
-                <button class="btn btn-outline" onclick="document.getElementById('fileInput').click()">Importar</button></div>
-                <input type="file" id="fileInput" accept=".json" style="display:none">
-            </div>
-        </div>
-
-        <div class="main-list">
-            <div class="card">
-                <button id="toggleGlobalBtn" onclick="toggleGlobalVisibility()">
-                    <i class="fas fa-eye-slash"></i> Ocultar Globales
-                </button>
-                <h2><i class="fas fa-filter"></i> Filtrar Carpetas</h2>
-                <div class="folder-list" id="folderFilters"></div>
-            </div>
-            <div id="taskList"></div>
-        </div>
-    </div>
+    <span class="badge">Etapa Concluida</span>
+    <h1 style="margin-top: 15px;">Turpialy</h1>
+    <h2>¡No hay más tareas, felicidades! 🎉</h2>
+    <p>
+        El bachillerato oficialmente quedó atrás. Esta plataforma cumplió su propósito y queda retirada. 
+        ¡Éxitos en todo lo que se viene para el futuro!
+    </p>
 </div>
 
 <script>
-    let tasks = JSON.parse(localStorage.getItem('tm_pro_data')) || [];
-    let globalTasks = [];
-    let currentFilter = 'todas';
-    let editMode = false;
-    let showGlobal = true; // Variable de estado
+    // Lanzar confeti continuo en bucle
+    const duration = 15 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-    async function fetchGlobalTasks() {
-        try {
-            const response = await fetch('global_tasks.json?v=' + Date.now());
-            if (response.ok) {
-                const data = await response.json();
-                const globalStatus = JSON.parse(localStorage.getItem('tm_pro_global_status')) || {};
-                globalTasks = data.map(t => ({ ...t, completed: globalStatus[t.id] || false, isGlobal: true }));
-            }
-        } catch (e) { console.log("Sin archivo global."); }
-        render();
+    function randomInRange(min, max) {
+      return Math.random() * (max - min) + min;
     }
 
-    function toggleGlobalVisibility() {
-        showGlobal = !showGlobal;
-        const btn = document.getElementById('toggleGlobalBtn');
-        btn.innerHTML = showGlobal ? '<i class="fas fa-eye-slash"></i> Ocultar Globales' : '<i class="fas fa-eye"></i> Mostrar Globales';
-        render();
-    }
+    // Ráfaga inicial al cargar
+    confetti({ ...defaults, particleCount: 100, origin: { y: 0.6 } });
 
-    function saveData() {
-        localStorage.setItem('tm_pro_data', JSON.stringify(tasks.filter(t => !t.isGlobal)));
-        const globalStatus = {};
-        globalTasks.forEach(t => { if(t.completed) globalStatus[t.id] = true; });
-        localStorage.setItem('tm_pro_global_status', JSON.stringify(globalStatus));
-        render();
-    }
+    // Lluvia constante durante unos segundos
+    const interval = setInterval(function() {
+      const timeLeft = animationEnd - Date.now();
 
-    function checkNewFolder(select) {
-        document.getElementById('taskFolderNew').style.display = select.value === "NUEVA" ? "block" : "none";
-    }
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
 
-    function render() {
-        const visibleTasks = showGlobal ? [...tasks, ...globalTasks] : [...tasks];
-        const allForFolders = [...tasks, ...globalTasks];
-        const folders = [...new Set(allForFolders.map(t => t.folder || 'General'))];
-        
-        const filterContainer = document.getElementById('folderFilters');
-        filterContainer.innerHTML = `<div class="folder-chip ${currentFilter === 'todas' ? 'active' : ''}" onclick="filterBy('todas')">Todas</div>`;
-        folders.forEach(f => {
-            filterContainer.innerHTML += `<div class="folder-chip ${currentFilter === f ? 'active' : ''}" onclick="filterBy('${f}')">${f}</div>`;
-        });
-
-        let options = `<option value="General">General</option>`;
-        folders.filter(f => f !== "General").forEach(f => options += `<option value="${f}">${f}</option>`);
-        options += `<option value="NUEVA">+ Nueva Carpeta...</option>`;
-        document.getElementById('taskFolderSelect').innerHTML = options;
-
-        let filtered = currentFilter === 'todas' ? visibleTasks : visibleTasks.filter(t => t.folder === currentFilter);
-        filtered.sort((a, b) => {
-            if (a.completed !== b.completed) return a.completed - b.completed;
-            if (!a.dueDate) return 1; if (!b.dueDate) return -1;
-            return new Date(a.dueDate) - new Date(b.dueDate);
-        });
-
-        document.getElementById('taskList').innerHTML = filtered.map(t => `
-            <div class="task-item ${t.completed ? 'completed' : ''} ${t.isGlobal ? 'global-task' : ''}">
-                <div class="task-header">
-                    <div class="task-title">${t.isGlobal ? '🌐 ' : ''}${t.title}</div>
-                    <div style="display:flex; gap:5px">
-                        <button class="btn btn-outline" onclick="toggleTask('${t.id}', ${t.isGlobal})"><i class="fas ${t.completed ? 'fa-undo' : 'fa-check'}"></i></button>
-                        ${!t.isGlobal ? `<button class="btn btn-edit" onclick="startEdit(${t.id})"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-danger" onclick="deleteTask(${t.id})"><i class="fas fa-trash"></i></button>` : ''}
-                    </div>
-                </div>
-                ${t.description ? `<div class="task-desc">${t.description}</div>` : ''}
-                <div class="task-meta">
-                    <span><i class="fas fa-folder"></i> ${t.folder || 'General'}</span>
-                    <span class="${t.dueDate && new Date(t.dueDate) < new Date() && !t.completed ? 'urgent' : ''}">
-                        <i class="fas fa-calendar-alt"></i> ${t.dueDate || 'Sin fecha'}
-                    </span>
-                </div>
-            </div>
-        `).join('') || '<p style="text-align:center; color:#555;">No hay tareas.</p>';
-    }
-
-    const taskForm = document.getElementById('taskForm');
-    taskForm.onsubmit = (e) => {
-        e.preventDefault();
-        let folder = document.getElementById('taskFolderSelect').value;
-        if(folder === "NUEVA") folder = document.getElementById('taskFolderNew').value;
-        if (editMode) {
-            const id = parseInt(document.getElementById('editTaskId').value);
-            tasks = tasks.map(t => t.id === id ? { ...t, title: document.getElementById('taskTitle').value, folder, dueDate: document.getElementById('taskDueDate').value, description: document.getElementById('taskDesc').value } : t);
-            cancelEdit();
-        } else {
-            tasks.push({ id: Date.now(), title: document.getElementById('taskTitle').value, folder, dueDate: document.getElementById('taskDueDate').value, description: document.getElementById('taskDesc').value, completed: false });
-        }
-        taskForm.reset();
-        saveData();
-    };
-
-    function startEdit(id) {
-        const t = tasks.find(x => x.id === id);
-        if(!t) return;
-        editMode = true;
-        document.getElementById('editTaskId').value = t.id;
-        document.getElementById('taskTitle').value = t.title;
-        document.getElementById('taskDueDate').value = t.dueDate;
-        document.getElementById('taskDesc').value = t.description;
-        document.getElementById('taskFolderSelect').value = t.folder;
-        document.getElementById('formTitle').innerText = "Editando...";
-        document.getElementById('editingMsg').style.display = "block";
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function cancelEdit() {
-        editMode = false; taskForm.reset();
-        document.getElementById('formTitle').innerText = "Nueva Tarea";
-        document.getElementById('editingMsg').style.display = "none";
-    }
-
-    const toggleTask = (id, isGlobal) => {
-        if(isGlobal) globalTasks = globalTasks.map(t => t.id == id ? {...t, completed: !t.completed} : t);
-        else tasks = tasks.map(t => t.id == id ? {...t, completed: !t.completed} : t);
-        saveData();
-    };
-
-    const deleteTask = (id) => { if(confirm('¿Borrar?')) { tasks = tasks.filter(t => t.id !== id); saveData(); } };
-    const filterBy = (f) => { currentFilter = f; render(); };
-    
-    function exportData() {
-        const blob = new Blob([JSON.stringify(tasks)], {type: 'application/json'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = 'backup.json'; a.click();
-    }
-    document.getElementById('fileInput').onchange = (e) => {
-        const reader = new FileReader();
-        reader.onload = (ev) => { tasks = JSON.parse(ev.target.result); saveData(); };
-        reader.readAsText(e.target.files[0]);
-    };
-
-    function activarNotificaciones() {
-        if (!("Notification" in window)) return;
-        Notification.requestPermission().then(permission => {
-            if (permission === "granted") { alert("¡Activadas!"); chequearTareas(); }
-        });
-    }
-
-    function chequearTareas() {
-        const hoy = new Date().toLocaleDateString('en-CA');
-        [...tasks, ...globalTasks].forEach(t => {
-            if (!t.completed && t.dueDate === hoy && navigator.serviceWorker.controller) {
-                navigator.serviceWorker.ready.then(reg => {
-                    reg.showNotification("🚨 Tarea para hoy", { body: t.title, icon: 'logo.png' });
-                });
-            }
-        });
-    }
-
-    fetchGlobalTasks();
+      const particleCount = 50 * (timeLeft / duration);
+      confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+      confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+    }, 250);
 </script>
+
 </body>
 </html>
